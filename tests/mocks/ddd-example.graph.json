@@ -1,0 +1,1263 @@
+{
+  "graph": {
+    "nodes": {
+      "shared-infrastructure-nestjs-cqrs-events": {
+        "name": "shared-infrastructure-nestjs-cqrs-events",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/infrastructure-nestjs-cqrs-events",
+          "sourceRoot": "libs/shared/infrastructure-nestjs-cqrs-events/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:package",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/shared/infrastructure-nestjs-cqrs-events",
+                "tsConfig": "libs/shared/infrastructure-nestjs-cqrs-events/tsconfig.lib.json",
+                "packageJson": "libs/shared/infrastructure-nestjs-cqrs-events/package.json",
+                "main": "libs/shared/infrastructure-nestjs-cqrs-events/src/index.ts",
+                "assets": ["libs/shared/infrastructure-nestjs-cqrs-events/*.md"]
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/shared/infrastructure-nestjs-cqrs-events/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/shared/infrastructure-nestjs-cqrs-events"],
+              "options": {
+                "jestConfig": "libs/shared/infrastructure-nestjs-cqrs-events/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["type:infrastructure"],
+          "files": [
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/.eslintrc.json",
+              "hash": "3456be9b9036a42c593c82b050281230e4ca0ae4"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/jest.config.js",
+              "hash": "b32d33b35a2058af14c00e07f6167d42a60578b9"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/package.json",
+              "hash": "1bc404f800d948d1a532e42e89f18c4e4a36d877"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/project.json",
+              "hash": "0377671fea557b7bfac0ac3467797f62b28301be"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/README.md",
+              "hash": "94ab966de90772fa7a3904a86fd7db46d9152e8f"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/src/index.ts",
+              "hash": "025501e008207b854add205f9134a52bfd988ce6"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/src/lib/nestjs-cqrs-domain-events.ts",
+              "hash": "873857238a8762bbea5a28772e90a436f9622a9f",
+              "deps": ["shared-domain", "npm:@nestjs/common", "npm:@nestjs/cqrs"]
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/src/lib/shared-infrastructure-nestjs-cqrs-events.module.ts",
+              "hash": "a5eb474aaa056ad62743802c5ae7a0de3b4bb810",
+              "deps": ["shared-domain", "npm:@nestjs/common", "npm:@nestjs/cqrs"]
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/tsconfig.json",
+              "hash": "355f7fda9792f1426646744fb60198b3dd36560b"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/tsconfig.lib.json",
+              "hash": "9cdbe6a5b203d7aa8ed025a324a04b2616a748c2"
+            },
+            {
+              "file": "libs/shared/infrastructure-nestjs-cqrs-events/tsconfig.spec.json",
+              "hash": "d8716fecfa3b7929f162b71e7a966c579a63c071"
+            }
+          ]
+        }
+      },
+      "lending-infrastructure": {
+        "name": "lending-infrastructure",
+        "type": "lib",
+        "data": {
+          "root": "libs/lending/infrastructure",
+          "sourceRoot": "libs/lending/infrastructure/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:package",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/lending/infrastructure",
+                "tsConfig": "libs/lending/infrastructure/tsconfig.lib.json",
+                "packageJson": "libs/lending/infrastructure/package.json",
+                "main": "libs/lending/infrastructure/src/index.ts",
+                "assets": ["libs/lending/infrastructure/*.md"]
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/lending/infrastructure/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/lending/infrastructure"],
+              "options": {
+                "jestConfig": "libs/lending/infrastructure/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["domain:lending", "type:infrastructure"],
+          "files": [
+            {
+              "file": "libs/lending/infrastructure/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/lending/infrastructure/.eslintrc.json",
+              "hash": "3456be9b9036a42c593c82b050281230e4ca0ae4"
+            },
+            {
+              "file": "libs/lending/infrastructure/jest.config.js",
+              "hash": "7d011a40f94476191c5aed623f81f3caed9c9b14"
+            },
+            {
+              "file": "libs/lending/infrastructure/package.json",
+              "hash": "272f743c65472be1de7aafad1f96fa87b66d92b4"
+            },
+            {
+              "file": "libs/lending/infrastructure/project.json",
+              "hash": "6528344425fdf5c06208cac7f58ec2a150b23719"
+            },
+            {
+              "file": "libs/lending/infrastructure/README.md",
+              "hash": "f9e3609f30f6bb965e2d0c11574fe2c1681d278a"
+            },
+            {
+              "file": "libs/lending/infrastructure/src/index.ts",
+              "hash": "0284425613fff484ba652b6ebd34078da3ca204f"
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/lending-infrastructure.module.ts",
+              "hash": "0a505668a55cd4521e03c8115abf9fbbcadaf5c1",
+              "deps": ["npm:@nestjs/common"]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/lending.module.ts",
+              "hash": "ef3db68bbfec5d3391677007e843304f154e614b",
+              "deps": ["npm:@nestjs/common", "lending-application", "shared-infrastructure-nestjs-cqrs-events"]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/entities/book.entity.ts",
+              "hash": "e3b149be96fe96389bbeb8a237ef6d3c336daaae",
+              "deps": ["lending-domain", "shared-domain", "npm:typeorm"]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/entities/hold.entity.ts",
+              "hash": "498a418baca6dd99c9fb2f371f6045b139384ca2",
+              "deps": ["lending-domain", "npm:typeorm"]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/entities/patron.entity.ts",
+              "hash": "afbe4046515cffb5a19098df23da3486d0c90a8b",
+              "deps": ["lending-domain", "npm:typeorm"]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/lending-typeorm.module.ts",
+              "hash": "5de6f155870e019ff03504c1784604aa8864f157",
+              "deps": [
+                "lending-application",
+                "lending-domain",
+                "shared-infrastructure-nestjs-cqrs-events",
+                "npm:@nestjs/common",
+                "npm:@nestjs/typeorm"
+              ]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/repositories/book.repository.ts",
+              "hash": "2f5b461ae5b55aae74e29d76afd69941913b4519",
+              "deps": [
+                "lending-application",
+                "lending-domain",
+                "shared-domain",
+                "npm:@nestjs/common",
+                "npm:@nestjs/typeorm",
+                "npm:fp-ts",
+                "npm:typeorm"
+              ]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/repositories/patron.repository.spec.ts",
+              "hash": "6dcf7489587f059856e54c3ae8e1ba99b1a6eec4",
+              "deps": [
+                "lending-application",
+                "lending-domain",
+                "npm:@nestjs/config",
+                "npm:@nestjs/testing",
+                "npm:@nestjs/typeorm",
+                "npm:typeorm"
+              ]
+            },
+            {
+              "file": "libs/lending/infrastructure/src/lib/typeorm/repositories/patron.repository.ts",
+              "hash": "1889e6e58559ae2e01b5d263e1139be9b0f5187d",
+              "deps": [
+                "lending-application",
+                "lending-domain",
+                "shared-domain",
+                "npm:@nestjs/common",
+                "npm:@nestjs/typeorm",
+                "npm:fp-ts",
+                "npm:typeorm"
+              ]
+            },
+            {
+              "file": "libs/lending/infrastructure/tsconfig.json",
+              "hash": "355f7fda9792f1426646744fb60198b3dd36560b"
+            },
+            {
+              "file": "libs/lending/infrastructure/tsconfig.lib.json",
+              "hash": "9cdbe6a5b203d7aa8ed025a324a04b2616a748c2"
+            },
+            {
+              "file": "libs/lending/infrastructure/tsconfig.spec.json",
+              "hash": "d8716fecfa3b7929f162b71e7a966c579a63c071"
+            }
+          ]
+        }
+      },
+      "lending-application": {
+        "name": "lending-application",
+        "type": "lib",
+        "data": {
+          "root": "libs/lending/application",
+          "sourceRoot": "libs/lending/application/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:package",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/lending/application",
+                "tsConfig": "libs/lending/application/tsconfig.lib.json",
+                "packageJson": "libs/lending/application/package.json",
+                "main": "libs/lending/application/src/index.ts",
+                "assets": ["libs/lending/application/*.md"]
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/lending/application/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/lending/application"],
+              "options": {
+                "jestConfig": "libs/lending/application/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["domain:lending", "type:application"],
+          "files": [
+            {
+              "file": "libs/lending/application/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/lending/application/.eslintrc.json",
+              "hash": "3456be9b9036a42c593c82b050281230e4ca0ae4"
+            },
+            {
+              "file": "libs/lending/application/jest.config.js",
+              "hash": "a2a7e8b09ecb4782dd039434ffab9f8d44643243"
+            },
+            {
+              "file": "libs/lending/application/package.json",
+              "hash": "e1f0881aa2a4de3d2b36d580f70f848c141a0dc6"
+            },
+            {
+              "file": "libs/lending/application/project.json",
+              "hash": "adc8efd71301aa36c766e7aeb3c64a100575b9af"
+            },
+            {
+              "file": "libs/lending/application/README.md",
+              "hash": "f6b1962495726d81a505beb0352c61c836c0c838"
+            },
+            {
+              "file": "libs/lending/application/src/index.ts",
+              "hash": "b04b57ebca9a472d550ca8df44d8fdfffcc47712"
+            },
+            {
+              "file": "libs/lending/application/src/lib/book-hold-canceled.event-handler.ts",
+              "hash": "c4157d1297b92c672174ef0a84c747c394ecdba2",
+              "deps": ["lending-domain", "npm:@nestjs/cqrs", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/book-placed-on-hold.event-handler.ts",
+              "hash": "2c6de9c317489da5516c6c13910c73c9354dcaa3",
+              "deps": ["lending-domain", "shared-domain", "npm:@nestjs/cqrs", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/cancel-hold/cancel-hold.command.ts",
+              "hash": "a1d1d4beedbf0d2fb2c4125fe4fa2e50570a04df",
+              "deps": ["lending-domain", "shared-domain", "npm:@nestjs-architects/typed-cqrs"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/cancel-hold/cancel-hold.handler.spec.ts",
+              "hash": "f46881ea0df6bb947caf4b0b356202be1af2e7c0",
+              "deps": ["lending-domain", "shared-domain", "npm:fp-ts", "npm:jest-createspyobj"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/cancel-hold/cancel-hold.handler.ts",
+              "hash": "cd79c539180f0fb14e78bdb558c8a67ef25b1d0c",
+              "deps": ["lending-domain", "shared-domain", "npm:@nestjs/cqrs", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/cancel-hold/find-book-on-hold.ts",
+              "hash": "a5759b2d3a7a2b35c0a0458c34659a1bdb65883d",
+              "deps": ["lending-domain", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/check-out/check-out-book.command.ts",
+              "hash": "6aa3a515d32d62333971822f6607b6988b07e068",
+              "deps": ["lending-domain", "shared-domain", "npm:@nestjs-architects/typed-cqrs"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/check-out/check-out-book.handler.spec.ts",
+              "hash": "513c58d5b72931ca74a977730f40a71e0941b6b9",
+              "deps": ["lending-domain", "shared-domain", "npm:fp-ts", "npm:jest-createspyobj"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/check-out/check-out-book.handler.ts",
+              "hash": "c461958c7f253953ab57ef809ebbb539131d95d5",
+              "deps": [
+                "lending-domain",
+                "shared-domain",
+                "npm:@nestjs-architects/typed-cqrs",
+                "npm:@nestjs/cqrs",
+                "npm:fp-ts"
+              ]
+            },
+            {
+              "file": "libs/lending/application/src/lib/create-available-book-on-instance-added.event-handler.ts",
+              "hash": "ab9ad9bdae83da6d4852d8431c3dd5e5ded654cf",
+              "deps": ["npm:@nestjs/cqrs", "catalogue", "lending-domain", "shared-domain"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/duplicate-hold.event.handler.ts",
+              "hash": "ff64996a2bbad39aacba47eefc7de36d65c16458",
+              "deps": ["lending-domain", "npm:@nestjs/cqrs"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/lending-application.module.ts",
+              "hash": "624f3a82a8b2d89f8e88a4f75412923ea5cf05cd",
+              "deps": ["npm:@nestjs/common", "npm:@nestjs/cqrs"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/lending.facade.ts",
+              "hash": "8db824cce9274e4edea7a87dc4c5e7ff6959ba07",
+              "deps": ["shared-domain", "npm:@nestjs/common", "npm:@nestjs/cqrs"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/place-on-hold/find-available-book.ts",
+              "hash": "030fe871456d761045e610d252b3263d2b269f21",
+              "deps": ["lending-domain", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/place-on-hold/place-on-hold.command.ts",
+              "hash": "59b8adfe64644ef7383ebc5df239157e6b22d291",
+              "deps": ["lending-domain", "npm:@nestjs-architects/typed-cqrs", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/place-on-hold/place-on-hold.handler.spec.ts",
+              "hash": "640927112b260a5c6fdd1a24d97bd512203b3428",
+              "deps": ["lending-domain", "npm:fp-ts", "npm:jest-createspyobj", "shared-domain"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/place-on-hold/place-on-hold.handler.ts",
+              "hash": "f532bc0ddee9efb232dcbf0ca0659675b79069ad",
+              "deps": ["lending-domain", "shared-domain", "npm:@nestjs/cqrs", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/ports/book.repository.ts",
+              "hash": "5cd61107d229aba76402c78c0f41a9206bdf36a1",
+              "deps": ["lending-domain", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/src/lib/ports/patron.repository.ts",
+              "hash": "46b265d1c0d08768b8bbc4d6630ba61083362161",
+              "deps": ["lending-domain", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/application/tsconfig.json",
+              "hash": "355f7fda9792f1426646744fb60198b3dd36560b"
+            },
+            {
+              "file": "libs/lending/application/tsconfig.lib.json",
+              "hash": "9cdbe6a5b203d7aa8ed025a324a04b2616a748c2"
+            },
+            {
+              "file": "libs/lending/application/tsconfig.spec.json",
+              "hash": "d8716fecfa3b7929f162b71e7a966c579a63c071"
+            }
+          ]
+        }
+      },
+      "lending-ui-rest": {
+        "name": "lending-ui-rest",
+        "type": "lib",
+        "data": {
+          "root": "libs/lending/ui-rest",
+          "sourceRoot": "libs/lending/ui-rest/src",
+          "projectType": "library",
+          "targets": {
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/lending/ui-rest/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/lending/ui-rest"],
+              "options": {
+                "jestConfig": "libs/lending/ui-rest/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["domain:lengning", "type:ui"],
+          "files": [
+            {
+              "file": "libs/lending/ui-rest/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/lending/ui-rest/.eslintrc.json",
+              "hash": "3456be9b9036a42c593c82b050281230e4ca0ae4"
+            },
+            {
+              "file": "libs/lending/ui-rest/jest.config.js",
+              "hash": "dc4b9e1efc0927f08fdf3d7131f7cc6936e7111b"
+            },
+            {
+              "file": "libs/lending/ui-rest/project.json",
+              "hash": "27cc9ff37481f15725571f0ad7fcffeca196788c"
+            },
+            {
+              "file": "libs/lending/ui-rest/README.md",
+              "hash": "e539e7202999febca192c29d29a96a8d391d3017"
+            },
+            {
+              "file": "libs/lending/ui-rest/src/index.ts",
+              "hash": "3c3eec1aebdf6a6ef829f137f3217c1e88831442"
+            },
+            {
+              "file": "libs/lending/ui-rest/src/lib/lending-ui-rest.module.ts",
+              "hash": "19d259255949f8357976dc1c9d45fdf6cee38213",
+              "deps": ["npm:@nestjs/common"]
+            },
+            {
+              "file": "libs/lending/ui-rest/src/lib/patron-profile/dtos/place-on-hold.dto.ts",
+              "hash": "8f9007ca37fe62a9823611ccca374dca5b6bc8ab",
+              "deps": ["npm:class-validator"]
+            },
+            {
+              "file": "libs/lending/ui-rest/src/lib/patron-profile/patron-profile.controller.ts",
+              "hash": "b636eb2e95d9cac497a77ef7e48f269f96da0ed3",
+              "deps": ["lending-application", "lending-domain", "npm:@nestjs/common", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/ui-rest/src/lib/patron-profile/patron-profile.module.ts",
+              "hash": "dcdb92396e3a46f5a3d5034b0c08ea731efab621",
+              "deps": ["lending-infrastructure", "npm:@nestjs/common"]
+            },
+            {
+              "file": "libs/lending/ui-rest/tsconfig.json",
+              "hash": "355f7fda9792f1426646744fb60198b3dd36560b"
+            },
+            {
+              "file": "libs/lending/ui-rest/tsconfig.lib.json",
+              "hash": "9cdbe6a5b203d7aa8ed025a324a04b2616a748c2"
+            },
+            {
+              "file": "libs/lending/ui-rest/tsconfig.spec.json",
+              "hash": "d8716fecfa3b7929f162b71e7a966c579a63c071"
+            }
+          ]
+        }
+      },
+      "lending-domain": {
+        "name": "lending-domain",
+        "type": "lib",
+        "data": {
+          "root": "libs/lending/domain",
+          "sourceRoot": "libs/lending/domain/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:package",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/lending/domain",
+                "tsConfig": "libs/lending/domain/tsconfig.lib.json",
+                "packageJson": "libs/lending/domain/package.json",
+                "main": "libs/lending/domain/src/index.ts",
+                "assets": ["libs/lending/domain/*.md"]
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/lending/domain/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/lending/domain"],
+              "options": {
+                "jestConfig": "libs/lending/domain/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["domain:lending", "type:domain"],
+          "files": [
+            {
+              "file": "libs/lending/domain/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/lending/domain/.eslintrc.json",
+              "hash": "3456be9b9036a42c593c82b050281230e4ca0ae4"
+            },
+            {
+              "file": "libs/lending/domain/jest.config.js",
+              "hash": "fee3073c021ad0dd6028378de3d3e615b31c2641"
+            },
+            {
+              "file": "libs/lending/domain/package.json",
+              "hash": "522a79058d3e56c9e7bcd50cf99e6ef611d31600"
+            },
+            {
+              "file": "libs/lending/domain/project.json",
+              "hash": "92557fa2fc2ba6e75ffc430f2d7f252ee91dd140"
+            },
+            {
+              "file": "libs/lending/domain/README.md",
+              "hash": "772233c7cb050ddb5ec04eef1c6b332c8a3c3a33"
+            },
+            {
+              "file": "libs/lending/domain/src/index.ts",
+              "hash": "92f9f7f34a861aa045c266032451dad87ec8e8d4"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/book/available-book.ts",
+              "hash": "801723cdd803fc2aa8370060086f2f538937d7ed",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/book/book-on-hold.ts",
+              "hash": "b6c166bd2c64af5c557a97f8549597700f157874",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/book/book.ts",
+              "hash": "f85dee287d4f790bba07f324dde7ff5819c0cb38",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-check-out-failed.ts",
+              "hash": "822b23046ace8f132fc18ad214be42d60aa871bc"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-checked-out.ts",
+              "hash": "2dbecc50dff35b5981f8994f1472985f4f11daf0"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-duplicate-hold-found.event.ts",
+              "hash": "3c4e0dcc9bf66941a0cfa4138c3586047809d68b"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-hold-canceled.ts",
+              "hash": "474a54d74f0a03d2c06f4a92badfa4b80899e730"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-hold-canceling-failed.ts",
+              "hash": "731a4feca1d8bcc8817d3b782a81287ddb66d490"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-hold-failed.ts",
+              "hash": "d5300b4a473c5c6f9f85ff23df4e112cf36dccc5"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-placed-on-hold-events.ts",
+              "hash": "6c8dcb64fc0269db6dcb2823ffee1af66dd6f49f"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/book-placed-on-hold.ts",
+              "hash": "abb0d3ee8676778506b85db967a6d8f3ee20fbfd"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/maximum-number-on-holds-reached.ts",
+              "hash": "91048553a126939ed5bee4525a99b9d1dad6a4e7"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/events/patron-event.ts",
+              "hash": "d8ccfc248af483952995e55d0a0eaa92bf2da89a"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/factories/patron.factory.ts",
+              "hash": "6305d11901ed9ca0187b13cc65e0529f5ebe78f8"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/patron.ts",
+              "hash": "381c34e0c65e65f59e0e5960c06b29444927b24d",
+              "deps": ["npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/policies/placing-on-hold-policy.ts",
+              "hash": "ddd8809a1cd89ddf3cf553e15f4fdefce9b027ab",
+              "deps": ["npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/book-id.ts",
+              "hash": "7569527565ce59ce861d14aed49606651e32b512",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/date.vo.ts",
+              "hash": "d9fe8417923c170def0c0f42b1552c9de4a8216f",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/hold-duration.ts",
+              "hash": "40a74f306566fd080a003cc1a934c1c0befa8726",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/hold.ts",
+              "hash": "76cd62d1bfac9442bb2d1113feeb21a22c23b62d",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/library-branch-id.ts",
+              "hash": "daae782f8fe97c94a086935a468c060a25bae08b",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/number-of-days.ts",
+              "hash": "d7dfd55ef80a9a8dfb5486114d4456cb540d7ffd",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/patron-holds.ts",
+              "hash": "54c862b28ab9c75ed5ae7c3fa175b60e782c9d8b"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/patron-id.ts",
+              "hash": "a6aec94aca56d735aa158d3ee5004622a3f0455a",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/patron-information.ts",
+              "hash": "6bb6d101b06f753ff52b79717be292b940e31a12"
+            },
+            {
+              "file": "libs/lending/domain/src/lib/value-objects/patron-type.ts",
+              "hash": "59aeeb0c431f76103a94f485049dd8395e7651ee"
+            },
+            {
+              "file": "libs/lending/domain/tests/book.fixtures.ts",
+              "hash": "27d6e25aa964dddda99114d867568aee6b719568",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/tests/patron-canceling-hold.spec.ts",
+              "hash": "cfcef49652f275eed47092ecf5751de52a2bf5b8",
+              "deps": ["npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/domain/tests/patron-requesting-close-ended-hold.spec.ts",
+              "hash": "3eae5804504effae95778bc3d31727020912bda5",
+              "deps": ["npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/domain/tests/patron-requesting-open-ended-hold.spec.ts",
+              "hash": "272a2c69e7470b34887a3f67887f62cd1ed1684c",
+              "deps": ["npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/domain/tests/patron-requestion-last-passible-hold.spec.ts",
+              "hash": "02649540eaebc910840b052e056db89df7683785",
+              "deps": ["npm:fp-ts"]
+            },
+            {
+              "file": "libs/lending/domain/tests/patron.fixtures.ts",
+              "hash": "50100bf11dc8af4ab64055ba8396ac7196f53ce9",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/lending/domain/tsconfig.json",
+              "hash": "355f7fda9792f1426646744fb60198b3dd36560b"
+            },
+            {
+              "file": "libs/lending/domain/tsconfig.lib.json",
+              "hash": "9cdbe6a5b203d7aa8ed025a324a04b2616a748c2"
+            },
+            {
+              "file": "libs/lending/domain/tsconfig.spec.json",
+              "hash": "d8716fecfa3b7929f162b71e7a966c579a63c071"
+            }
+          ]
+        }
+      },
+      "shared-domain": {
+        "name": "shared-domain",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared/domain",
+          "sourceRoot": "libs/shared/domain/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:package",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/shared/domain",
+                "tsConfig": "libs/shared/domain/tsconfig.lib.json",
+                "packageJson": "libs/shared/domain/package.json",
+                "main": "libs/shared/domain/src/index.ts",
+                "assets": ["libs/shared/domain/*.md"]
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/shared/domain/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/shared/domain"],
+              "options": {
+                "jestConfig": "libs/shared/domain/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["domain:shared", "type:domain"],
+          "files": [
+            {
+              "file": "libs/shared/domain/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/shared/domain/.eslintrc.json",
+              "hash": "3456be9b9036a42c593c82b050281230e4ca0ae4"
+            },
+            {
+              "file": "libs/shared/domain/jest.config.js",
+              "hash": "81460ff6bf1cc8731aa9fdb7c2b496191f832639"
+            },
+            {
+              "file": "libs/shared/domain/package.json",
+              "hash": "a238ac652b9e61246e3ce997115b918243148b49"
+            },
+            {
+              "file": "libs/shared/domain/project.json",
+              "hash": "e49918f0462978d6d4ac6b17ac29b56609e8edc1"
+            },
+            {
+              "file": "libs/shared/domain/README.md",
+              "hash": "e04b89a4dfdedbe69a1a43535e1a3eef10ffc493"
+            },
+            {
+              "file": "libs/shared/domain/src/index.ts",
+              "hash": "4e135936f650e541763a66d9fb51dfab3497b15e"
+            },
+            {
+              "file": "libs/shared/domain/src/lib/aggregates/aggregate-root-is-stale.ts",
+              "hash": "d282ee83aef78facf8c5418cc6afe1de3bde8182"
+            },
+            {
+              "file": "libs/shared/domain/src/lib/aggregates/version.ts",
+              "hash": "f4e78527a6fb96192810cae38cf0e2c1f80372e5",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/shared/domain/src/lib/commands/result.ts",
+              "hash": "78e892aaf26f9468ef79e9cf9e5d0b88abee9456"
+            },
+            {
+              "file": "libs/shared/domain/src/lib/errors/invalid-argument.exception.ts",
+              "hash": "6af8418159e2ea1bd28fac5400da4f318f7c1dea"
+            },
+            {
+              "file": "libs/shared/domain/src/lib/events/domain-events.ts",
+              "hash": "488eb27de23ca2199e7bfb917e49f01860070e20"
+            },
+            {
+              "file": "libs/shared/domain/src/lib/events/domain.event.ts",
+              "hash": "3132e452caebd3c5de09b4381f18ea1a0373ac3e"
+            },
+            {
+              "file": "libs/shared/domain/src/lib/uuid.ts",
+              "hash": "f1ac271c63c3c94ce234bcff6619b65d845f9dd7",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/shared/domain/tsconfig.json",
+              "hash": "355f7fda9792f1426646744fb60198b3dd36560b"
+            },
+            {
+              "file": "libs/shared/domain/tsconfig.lib.json",
+              "hash": "592f7660a644fbbe90e8abac47006c0c06dd42af"
+            },
+            {
+              "file": "libs/shared/domain/tsconfig.spec.json",
+              "hash": "d8716fecfa3b7929f162b71e7a966c579a63c071"
+            }
+          ]
+        }
+      },
+      "catalogue": {
+        "name": "catalogue",
+        "type": "lib",
+        "data": {
+          "root": "libs/catalogue",
+          "sourceRoot": "libs/catalogue/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:package",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/catalogue",
+                "tsConfig": "libs/catalogue/tsconfig.lib.json",
+                "packageJson": "libs/catalogue/package.json",
+                "main": "libs/catalogue/src/index.ts",
+                "assets": ["libs/catalogue/*.md"]
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/catalogue/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/libs/catalogue"],
+              "options": {
+                "jestConfig": "libs/catalogue/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": ["domain:catalogue", "type:crud"],
+          "files": [
+            {
+              "file": "libs/catalogue/.babelrc",
+              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
+            },
+            {
+              "file": "libs/catalogue/.eslintrc.json",
+              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+            },
+            {
+              "file": "libs/catalogue/jest.config.js",
+              "hash": "1c9914b9be331164bfaf14749438c3c2bf637d94"
+            },
+            {
+              "file": "libs/catalogue/package.json",
+              "hash": "cf41d5e863de68dea5c315c1f51350ee20ac524e"
+            },
+            {
+              "file": "libs/catalogue/project.json",
+              "hash": "32fac2076b1858f36acdbad0037d014d91834680"
+            },
+            {
+              "file": "libs/catalogue/README.md",
+              "hash": "988df3931fdf44019b9903e8018b37cc5c5e9a1b"
+            },
+            {
+              "file": "libs/catalogue/src/index.ts",
+              "hash": "9cac4ecd20a42469527ba250e81e6c60ee7795d2"
+            },
+            {
+              "file": "libs/catalogue/src/lib/book-id.ts",
+              "hash": "7569527565ce59ce861d14aed49606651e32b512",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/book-instance-added-to-catalogue.ts",
+              "hash": "b90e023180c8c978feaba99f60b71f2f90b8766b",
+              "deps": ["shared-domain"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/book-instance.ts",
+              "hash": "cd8c8d047b76764ff7009b7874e9d425c4fc249e",
+              "deps": ["npm:@mikro-orm/core"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/book-type.ts",
+              "hash": "f5713b44583574ab8c1b8370cb11773a93da2561"
+            },
+            {
+              "file": "libs/catalogue/src/lib/book.controller.ts",
+              "hash": "dfe847d3bbc286f7581fa652572d1c3c0a8e889e",
+              "deps": ["shared-domain", "npm:@nestjs/common"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/book.ts",
+              "hash": "a1696ae87487c7aa60c549a38f8aad102eb0c758",
+              "deps": ["npm:@mikro-orm/core", "npm:tiny-types"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/catalogue-database.ts",
+              "hash": "733f6cbf879c60941905d1b542ee13fce92488ec",
+              "deps": ["npm:@mikro-orm/core", "npm:@mikro-orm/nestjs", "npm:@nestjs/common", "npm:fp-ts", "npm:typeorm"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/catalogue.module.ts",
+              "hash": "518082e8fb3ef68dd2ed779cf851a9cebee61343",
+              "deps": ["shared-infrastructure-nestjs-cqrs-events", "npm:@mikro-orm/nestjs", "npm:@nestjs/common"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/catalogue.ts",
+              "hash": "38cca3b90b144222b4acae6d7d8fcf898eeb4733",
+              "deps": ["shared-domain", "npm:@nestjs/common", "npm:fp-ts"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/custom-db-types.ts",
+              "hash": "e95bf6d1dcd8d4ab7360f46687a4708d84934d0f",
+              "deps": ["npm:@mikro-orm/core"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/dto/create-book.dto.ts",
+              "hash": "dffb66893b7214da5d02b7c0d5d5cfdc6bf39339",
+              "deps": ["npm:class-validator"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/dto/update-book.dto.ts",
+              "hash": "4b64e9a5b40992dd0075a97fb1ea064541faddbc",
+              "deps": ["npm:@nestjs/mapped-types"]
+            },
+            {
+              "file": "libs/catalogue/src/lib/isbn.spec.ts",
+              "hash": "75aae7c02f66396a7c8f41c9d26e34664fd9ff6b"
+            },
+            {
+              "file": "libs/catalogue/src/lib/isbn.ts",
+              "hash": "8a3e165f4b8c374b6f36e5b611b4d78b142745b4",
+              "deps": ["npm:tiny-types"]
+            },
+            {
+              "file": "libs/catalogue/tsconfig.json",
+              "hash": "e258886ffc933cca0326ceb2ee4fde881378131b"
+            },
+            {
+              "file": "libs/catalogue/tsconfig.lib.json",
+              "hash": "6327816a7d466c6255b204662cc110dad479a178"
+            },
+            {
+              "file": "libs/catalogue/tsconfig.spec.json",
+              "hash": "67f149c4c04b9fad28e3b59462e55ba2d1e1d09b"
+            }
+          ]
+        }
+      },
+      "library": {
+        "name": "library",
+        "type": "app",
+        "data": {
+          "root": "apps/library",
+          "sourceRoot": "apps/library/src",
+          "projectType": "application",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/node:build",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/apps/library",
+                "main": "apps/library/src/main.ts",
+                "tsConfig": "apps/library/tsconfig.app.json",
+                "assets": ["apps/library/src/assets"]
+              },
+              "configurations": {
+                "production": {
+                  "optimization": true,
+                  "extractLicenses": true,
+                  "inspect": false,
+                  "fileReplacements": [
+                    {
+                      "replace": "apps/library/src/environments/environment.ts",
+                      "with": "apps/library/src/environments/environment.prod.ts"
+                    }
+                  ]
+                }
+              }
+            },
+            "serve": {
+              "executor": "@nrwl/node:execute",
+              "options": {
+                "buildTarget": "library:build"
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["apps/library/**/*.ts"]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": ["coverage/apps/library"],
+              "options": {
+                "jestConfig": "apps/library/jest.config.js",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": [],
+          "files": [
+            {
+              "file": "apps/library/.eslintrc.json",
+              "hash": "efd4ecf761811f25edef581cbe05a50562e78d99"
+            },
+            {
+              "file": "apps/library/jest.config.js",
+              "hash": "255710459b98dbcc70c04ca7c2910064443835bd"
+            },
+            {
+              "file": "apps/library/project.json",
+              "hash": "05f632a541d3fd9443bfb30b364cf937e1f00584"
+            },
+            {
+              "file": "apps/library/src/app/.gitkeep",
+              "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            },
+            {
+              "file": "apps/library/src/app/app-core.module.ts",
+              "hash": "0a71da31a58a0c0f94c8d4926465d35fd73f72df",
+              "deps": [
+                "npm:@mikro-orm/core",
+                "npm:@mikro-orm/nestjs",
+                "npm:@nestjs/common",
+                "npm:@nestjs/config",
+                "npm:@nestjs/typeorm"
+              ]
+            },
+            {
+              "file": "apps/library/src/app/app.module.ts",
+              "hash": "fbfd928b81081b0f505c551fc16538ebae4a45e5",
+              "deps": ["catalogue", "lending-ui-rest", "npm:@nestjs/common"]
+            },
+            {
+              "file": "apps/library/src/assets/.gitkeep",
+              "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            },
+            {
+              "file": "apps/library/src/environments/environment.prod.ts",
+              "hash": "c9669790be176ac85a5d8c11278875c2f52dc507"
+            },
+            {
+              "file": "apps/library/src/environments/environment.ts",
+              "hash": "a20cfe55731540eac839ab33f9ce1eaa6da50b16"
+            },
+            {
+              "file": "apps/library/src/main.ts",
+              "hash": "2b0e78ed09c049708dbf033eb158b80b2c2129e6",
+              "deps": ["npm:@nestjs/common", "npm:@nestjs/core"]
+            },
+            {
+              "file": "apps/library/src/migrations/.snapshot-library.json",
+              "hash": "d689e853b161c5a2cabcb2865e4daf00d8d4bdf6"
+            },
+            {
+              "file": "apps/library/src/migrations/Migration20221204160713.ts",
+              "hash": "ba1695826f338a56c273cbad406d591681bdbb1b",
+              "deps": ["npm:@mikro-orm/migrations"]
+            },
+            {
+              "file": "apps/library/test/smoke/cancel-hold.spec.ts",
+              "hash": "594e9a62d1f6ba5356b3223ec649e036f7b415f5",
+              "deps": [
+                "npm:@nestjs/common",
+                "npm:@nestjs/testing",
+                "npm:@nestjs/typeorm",
+                "lending-domain",
+                "lending-infrastructure",
+                "npm:supertest",
+                "npm:typeorm"
+              ]
+            },
+            {
+              "file": "apps/library/test/smoke/take-book-on-hold.spec.ts",
+              "hash": "78d0294a77028fff281cda8cb0592f1bb5ab0c4e",
+              "deps": [
+                "npm:@nestjs/common",
+                "npm:@nestjs/testing",
+                "npm:@nestjs/typeorm",
+                "lending-domain",
+                "lending-infrastructure",
+                "npm:supertest",
+                "npm:typeorm"
+              ]
+            },
+            {
+              "file": "apps/library/tsconfig.app.json",
+              "hash": "515cb2d76f75cf59bd88a173bd9e3a336d6a6846"
+            },
+            {
+              "file": "apps/library/tsconfig.json",
+              "hash": "63dbe35fb282d5f9ac4a724607173e6316269e29"
+            },
+            {
+              "file": "apps/library/tsconfig.spec.json",
+              "hash": "a18afb604688956c6a84dd7780d99923f0c04662"
+            }
+          ]
+        }
+      }
+    },
+    "dependencies": {
+      "shared-infrastructure-nestjs-cqrs-events": [
+        {
+          "source": "shared-infrastructure-nestjs-cqrs-events",
+          "target": "shared-domain",
+          "type": "static"
+        }
+      ],
+      "lending-infrastructure": [
+        {
+          "source": "lending-infrastructure",
+          "target": "lending-application",
+          "type": "static"
+        },
+        {
+          "source": "lending-infrastructure",
+          "target": "shared-infrastructure-nestjs-cqrs-events",
+          "type": "static"
+        },
+        {
+          "source": "lending-infrastructure",
+          "target": "lending-domain",
+          "type": "static"
+        },
+        {
+          "source": "lending-infrastructure",
+          "target": "shared-domain",
+          "type": "static"
+        }
+      ],
+      "lending-application": [
+        {
+          "source": "lending-application",
+          "target": "lending-domain",
+          "type": "static"
+        },
+        {
+          "source": "lending-application",
+          "target": "shared-domain",
+          "type": "static"
+        },
+        {
+          "source": "lending-application",
+          "target": "catalogue",
+          "type": "static"
+        }
+      ],
+      "lending-ui-rest": [
+        {
+          "source": "lending-ui-rest",
+          "target": "lending-application",
+          "type": "static"
+        },
+        {
+          "source": "lending-ui-rest",
+          "target": "lending-domain",
+          "type": "static"
+        },
+        {
+          "source": "lending-ui-rest",
+          "target": "lending-infrastructure",
+          "type": "static"
+        }
+      ],
+      "lending-domain": [
+        {
+          "source": "lending-domain",
+          "target": "shared-domain",
+          "type": "static"
+        }
+      ],
+      "shared-domain": [],
+      "catalogue": [
+        {
+          "source": "catalogue",
+          "target": "shared-domain",
+          "type": "static"
+        },
+        {
+          "source": "catalogue",
+          "target": "shared-infrastructure-nestjs-cqrs-events",
+          "type": "static"
+        }
+      ],
+      "library": [
+        {
+          "source": "library",
+          "target": "catalogue",
+          "type": "static"
+        },
+        {
+          "source": "library",
+          "target": "lending-ui-rest",
+          "type": "static"
+        },
+        {
+          "source": "library",
+          "target": "lending-domain",
+          "type": "static"
+        },
+        {
+          "source": "library",
+          "target": "lending-infrastructure",
+          "type": "static"
+        }
+      ]
+    }
+  },
+  "affectedProjects": [],
+  "criticalPath": []
+}
