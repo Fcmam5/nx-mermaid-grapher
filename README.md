@@ -1,5 +1,7 @@
 # nx-mermaid-grapher
 
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FFcmam5%2Fnx-mermaid-grapher%2Fdevelop)](https://dashboard.stryker-mutator.io/reports/github.com/Fcmam5/nx-mermaid-grapher/develop) [![Known Vulnerabilities](https://snyk.io/test/github/Fcmam5/nx-mermaid-grapher/badge.svg)](https://snyk.io/test/github/Fcmam5/nx-mermaid-grapher) [![codecov](https://codecov.io/gh/Fcmam5/nx-mermaid-grapher/branch/develop/graph/badge.svg?token=QSBZLLE1L1)](https://codecov.io/gh/Fcmam5/nx-mermaid-grapher) [![npm](https://img.shields.io/npm/v/nx-mermaid-grapher)](https://www.npmjs.com/package/nx-mermaid-grapher)
+
 A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX dependency graphs](https://nx.dev/packages/nx/documents/dep-graph).
 
 
@@ -43,11 +45,74 @@ Markdown:
 
 ### CLI
 
-*tbd*
+To run this tool from your CLI, you need to install it globally with:
+
+```bash
+npm i -g nx-mermaid-grapher
+```
+
+Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file:
+
+```
+Options:
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -f, --file     NX graph output file (see:
+                 https://nx.dev/packages/nx/documents/dep-graph#file)
+                                                             [string] [required]
+```
+
+**Example**:
+
+```
+nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json
+```
 
 ### Code
 
-*tbd*
+If you want to extend this library, you may want to instantiate the exposed classes and use them, for example:
+
+```ts
+import { DiGraph, NXGraphFileLoader, NxMermaidGrapher } from 'nx-mermaid-grapher';
+
+const loader = new NXGraphFileLoader();
+const diGraph = new DiGraph();
+const core = new NxMermaidGrapher(loader, diGraph);
+
+core.init('path/to/file');
+
+const logMerMaidInMd = (str: string) => `\`\`\`mermaid\n${str}\`\`\``;
+
+console.log(logMerMaidInMd(core.getGraphSnippet()));
+```
+
+Or, if you wish to use a different graph than the default [DiGraph](./lib/data-structures/di-graph.ds.ts) (Directed graph), you may implement the `IGraph<T>` class and implement your own methods, for example:
+
+```ts
+import { IGraph } from "nx-mermaid-grapher/dist/data-structures/graph.ds.interface";
+
+class SomeGraph implements IGraph<MyType> {
+    addNode(nodeVal: MyType): void {
+        throw new Error("Method not implemented.");
+    }
+    addEdge(source: MyType, destination: MyType): void {
+        throw new Error("Method not implemented.");
+    }
+    getGraph(): { [key: string]: MyType[]; } {
+        throw new Error("Method not implemented.");
+    }
+}
+```
+
+Then just pass it to `NxMermaidGrapher` constructor.
+
+```ts
+import {  NXGraphFileLoader, NxMermaidGrapher } from 'nx-mermaid-grapher';
+
+const loader = new NXGraphFileLoader();
+const myGraph = new SomeGraph();
+const core = new NxMermaidGrapher(loader, myGraph);
+```
 
 ## Contributing
 

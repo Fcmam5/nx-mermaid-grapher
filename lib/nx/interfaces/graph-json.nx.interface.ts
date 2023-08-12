@@ -19,7 +19,7 @@ export interface GraphJsonResponse {
 
 export class GraphJsonResponseCls implements GraphJsonResponse {
   tasks?: TaskGraph | undefined;
-  graph: ProjectGraph = { nodes: {}, dependencies: {} };
+  graph!: ProjectGraph;
   affectedProjects?: string[] | undefined;
   criticalPath?: string[] | undefined;
 }

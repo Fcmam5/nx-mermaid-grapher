@@ -2,10 +2,14 @@
   "name": "nx-mermaid-grapher",
   "version": "1.0.0",
   "description": "Create MermaidJS graphs from NX dependency graphs",
-  "main": "lib/main.ts",
+  "main": "dist/cli.js",
   "files": [
     "dist/*"
   ],
+  "bin": {
+    "nx-mermaid-grapher": "./dist/cli.js"
+  },
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --build --sourcemap",
     "test": "jest",
@@ -16,7 +20,7 @@
     "format:check": "prettier --check lib/**/*.js",
     "mutate": "stryker run",
     "prebuild": "rm -fr dist",
-    "dev": "ts-node lib/main.ts"
+    "dev": "ts-node lib/cli.ts"
   },
   "repository": {
     "type": "git",
@@ -33,6 +37,7 @@
     "@stryker-mutator/jest-runner": "^7.1.1",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.9",
+    "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "eslint": "^8.46.0",
@@ -47,6 +52,6 @@
   },
   "dependencies": {
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0"
+    "yargs": "^17.7.2"
   }
 }

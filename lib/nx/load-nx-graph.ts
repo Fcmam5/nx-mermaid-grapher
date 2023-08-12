@@ -4,6 +4,7 @@ import { GraphJsonResponse, GraphJsonResponseCls } from '../nx/interfaces/graph-
 
 export class NXGraphFileLoader {
   private readFile(path: string) {
+    // Stryker disable next-line StringLiteral
     const content = readFileSync(path, 'utf-8');
     return JSON.parse(content);
   }
