@@ -64,6 +64,8 @@ describe('Library core', () => {
     });
 
     it('should get a graph with all libraries', () => {
+      console.log(coreCls.getGraphSnippet());
+
       expect(coreCls.getGraphSnippet()).toEqual(expectedGraph);
     });
 
@@ -92,11 +94,22 @@ const mockGraphAsObj = {
 };
 
 const expectedGraph = `graph LR
-  shared-infrastructure-nestjs-cqrs-events-->shared-domain
-  lending-infrastructure-->lending-application-->shared-infrastructure-nestjs-cqrs-events-->lending-domain-->shared-domain
-  lending-application-->lending-domain-->shared-domain-->catalogue
-  lending-ui-rest-->lending-application-->lending-domain-->lending-infrastructure
-  lending-domain-->shared-domain
-  catalogue-->shared-domain-->shared-infrastructure-nestjs-cqrs-events
-  library-->catalogue-->lending-ui-rest-->lending-domain-->lending-infrastructure
+  shared-infrastructure-nestjs-cqrs-events --> shared-domain
+  lending-infrastructure --> lending-application
+  lending-infrastructure --> shared-infrastructure-nestjs-cqrs-events
+  lending-infrastructure --> lending-domain
+  lending-infrastructure --> shared-domain
+  lending-application --> lending-domain
+  lending-application --> shared-domain
+  lending-application --> catalogue
+  lending-ui-rest --> lending-application
+  lending-ui-rest --> lending-domain
+  lending-ui-rest --> lending-infrastructure
+  lending-domain --> shared-domain
+  catalogue --> shared-domain
+  catalogue --> shared-infrastructure-nestjs-cqrs-events
+  library --> catalogue
+  library --> lending-ui-rest
+  library --> lending-domain
+  library --> lending-infrastructure
 `;

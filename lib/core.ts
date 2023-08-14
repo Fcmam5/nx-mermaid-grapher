@@ -18,15 +18,16 @@ export class NxMermaidGrapher {
   getGraphSnippet() {
     const initStr = `graph LR\n`;
     const rs = this.graph.getGraph();
-
     return Object.keys(rs)
-      .filter((k) => {
-        return rs[k].length;
+      .filter((libName) => {
+        return rs[libName].length;
       })
-      .reduce((acc, curr) => {
-        const line = [curr, ...rs[curr]].join('-->');
+      .reduce((resultString, currLibName) => {
+        const lines = rs[currLibName].reduce((acc: string[], dependency: string) => {
+          return [...acc, `  ${currLibName} --> ${dependency}\n`];
+        }, []);
 
-        return `${acc}  ${line}\n`;
+        return `${resultString}${lines.join('')}`;
       }, initStr);
   }
 

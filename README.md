@@ -16,30 +16,52 @@ If you clone the project, and run [`nx dep-graph` (or `nx graph`)](https://nx.de
 And below is the generated `mermaid.js` graph ([you can use controllers!](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)):
 
 ```mermaid
-graph LR
-  shared-infrastructure-nestjs-cqrs-events-->shared-domain
-  lending-infrastructure-->lending-application-->shared-infrastructure-nestjs-cqrs-events-->lending-domain-->shared-domain
-  lending-application-->lending-domain-->shared-domain-->catalogue
-  lending-ui-rest-->lending-application-->lending-domain-->lending-infrastructure
-  lending-domain-->shared-domain
-  catalogue-->shared-domain-->shared-infrastructure-nestjs-cqrs-events
-  library-->catalogue-->lending-ui-rest-->lending-domain-->lending-infrastructure
+    graph LR
+      shared-infrastructure-nestjs-cqrs-events --> shared-domain
+      lending-infrastructure --> lending-application
+      lending-infrastructure --> shared-infrastructure-nestjs-cqrs-events
+      lending-infrastructure --> lending-domain
+      lending-infrastructure --> shared-domain
+      lending-application --> lending-domain
+      lending-application --> shared-domain
+      lending-application --> catalogue
+      lending-ui-rest --> lending-application
+      lending-ui-rest --> lending-domain
+      lending-ui-rest --> lending-infrastructure
+      lending-domain --> shared-domain
+      catalogue --> shared-domain
+      catalogue --> shared-infrastructure-nestjs-cqrs-events
+      library --> catalogue
+      library --> lending-ui-rest
+      library --> lending-domain
+      library --> lending-infrastructure
 ```
 
 Markdown:
 
-```md
-    ```mermaid
+<pre>
+```mermaid
     graph LR
-        shared-infrastructure-nestjs-cqrs-events-->shared-domain
-        lending-infrastructure-->lending-application-->shared-infrastructure-nestjs-cqrs-events-->lending-domain-->shared-domain
-        lending-application-->lending-domain-->shared-domain-->catalogue
-        lending-ui-rest-->lending-application-->lending-domain-->lending-infrastructure
-        lending-domain-->shared-domain
-        catalogue-->shared-domain-->shared-infrastructure-nestjs-cqrs-events
-        library-->catalogue-->lending-ui-rest-->lending-domain-->lending-infrastructure
-    ```
+        shared-infrastructure-nestjs-cqrs-events --> shared-domain
+        lending-infrastructure --> lending-application
+        lending-infrastructure --> shared-infrastructure-nestjs-cqrs-events
+        lending-infrastructure --> lending-domain
+        lending-infrastructure --> shared-domain
+        lending-application --> lending-domain
+        lending-application --> shared-domain
+        lending-application --> catalogue
+        lending-ui-rest --> lending-application
+        lending-ui-rest --> lending-domain
+        lending-ui-rest --> lending-infrastructure
+        lending-domain --> shared-domain
+        catalogue --> shared-domain
+        catalogue --> shared-infrastructure-nestjs-cqrs-events
+        library --> catalogue
+        library --> lending-ui-rest
+        library --> lending-domain
+        library --> lending-infrastructure
 ```
+</pre>
 
 ## Usage
 
@@ -49,9 +71,13 @@ To run this tool from your CLI, you need to install it globally with:
 
 ```bash
 npm i -g nx-mermaid-grapher
+
+
+# or using npx
+npx nx-mermaid-grapher -f file.json
 ```
 
-Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file:
+Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
 Options:
@@ -64,8 +90,8 @@ Options:
 
 **Example**:
 
-```
-nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json
+```bash
+npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json
 ```
 
 ### Code
