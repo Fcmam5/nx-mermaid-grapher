@@ -14,6 +14,13 @@ import { NxMermaidGrapher } from './core';
         demandOption: true,
         describe: 'NX graph output file (see: https://nx.dev/packages/nx/documents/dep-graph#file)',
       },
+      e: {
+        type: 'string',
+        array: true,
+        alias: 'exclude',
+        demandOption: false,
+        describe: 'Exclude a library',
+      },
     })
     .usage('Usage: nx-mermaid-grapher -f [path]')
     .parseSync();
@@ -26,5 +33,5 @@ import { NxMermaidGrapher } from './core';
 
   const logMerMaidInMd = (str: string) => `\`\`\`mermaid\n${str}\`\`\``;
 
-  console.log(logMerMaidInMd(core.getGraphSnippet()));
+  console.log(logMerMaidInMd(core.getGraphSnippet(argv.e)));
 })();

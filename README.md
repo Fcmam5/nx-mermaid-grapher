@@ -86,12 +86,19 @@ Options:
   -f, --file     NX graph output file (see:
                  https://nx.dev/packages/nx/documents/dep-graph#file)
                                                              [string] [required]
+  -e, --exclude  Exclude a library                                       [array]
 ```
 
 **Example**:
 
 ```bash
 npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json
+```
+
+Optionally you can exclude one, or multiple libraries. For example:
+
+```bash
+npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json -e lending-infrastructure -e lending-ui-rest
 ```
 
 ### Code

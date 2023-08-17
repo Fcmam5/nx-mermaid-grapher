@@ -1,4 +1,4 @@
-import { IGraph } from './data-structures/graph.ds.interface';
+import { Edges, IGraph } from './data-structures/graph.ds.interface';
 import { GraphJsonResponse } from './nx/interfaces/graph-json.nx.interface';
 import { NXGraphFileLoader } from './nx/load-nx-graph';
 
@@ -15,9 +15,11 @@ export class NxMermaidGrapher {
     this.toDiGraph();
   }
 
-  getGraphSnippet() {
+  getGraphSnippet(excludedLibs: string[] = []) {
     const initStr = `graph LR\n`;
-    const rs = this.graph.getGraph();
+    const graphObj = this.graph.getGraph();
+    const rs = this.filterOutLibs(graphObj, excludedLibs);
+
     return Object.keys(rs)
       .filter((libName) => {
         return rs[libName].length;
@@ -41,5 +43,21 @@ export class NxMermaidGrapher {
         this.graph.addEdge(d.source, d.target);
       });
     });
+  }
+
+  private filterOutLibs(graphEdges: Edges<string>, excludedLibs: string[]) {
+    if (!excludedLibs.length) {
+      return graphEdges;
+    }
+
+    const _graphEdges = { ...graphEdges };
+
+    excludedLibs.forEach((lib) => delete _graphEdges[lib]);
+
+    Object.keys(_graphEdges).forEach((edge) => {
+      _graphEdges[edge] = _graphEdges[edge].filter((node) => !excludedLibs.includes(node));
+    });
+
+    return _graphEdges;
   }
 }
