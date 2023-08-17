@@ -4,6 +4,15 @@
 
 A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX dependency graphs](https://nx.dev/packages/nx/documents/dep-graph).
 
+<!-- omit in toc -->
+## Table of Contents
+- [nx-mermaid-grapher](#nx-mermaid-grapher)
+  - [Example](#example)
+  - [Usage](#usage)
+    - [CLI](#cli)
+    - [Code](#code)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Example
 

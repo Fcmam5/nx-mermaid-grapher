@@ -1,6 +1,6 @@
 {
   "name": "nx-mermaid-grapher",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Create MermaidJS graphs from NX dependency graphs",
   "main": "dist/cli.js",
   "files": [
