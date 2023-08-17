@@ -64,12 +64,22 @@ describe('Library core', () => {
     });
 
     it('should get a graph with all libraries', () => {
-      console.log(coreCls.getGraphSnippet());
-
       expect(coreCls.getGraphSnippet()).toEqual(expectedGraph);
     });
 
-    it.todo('should get a graph without excluded libraries');
+    it('should get a graph with all libraries if exclusion array is empty', () => {
+      expect(coreCls.getGraphSnippet([])).toEqual(expectedGraph);
+    });
+
+    it('should get a graph without excluded libraries', () => {
+      expect(coreCls.getGraphSnippet(['shared-infrastructure-nestjs-cqrs-events', 'catalogue'])).toEqual(
+        expectedGraphWithExcludedLibs,
+      );
+    });
+
+    it('should get a graph without excluded head library', () => {
+      expect(coreCls.getGraphSnippet(['library'])).toEqual(expectedGraphWithoutHeadLib);
+    });
   });
 
   describe('.getGraphSnippetForLib', () => {
@@ -112,4 +122,37 @@ const expectedGraph = `graph LR
   library --> lending-ui-rest
   library --> lending-domain
   library --> lending-infrastructure
+`;
+
+// Without: 'shared-infrastructure-nestjs-cqrs-events' and 'catalogue'
+const expectedGraphWithExcludedLibs = `graph LR
+  lending-infrastructure --> lending-application
+  lending-infrastructure --> lending-domain
+  lending-infrastructure --> shared-domain
+  lending-application --> lending-domain
+  lending-application --> shared-domain
+  lending-ui-rest --> lending-application
+  lending-ui-rest --> lending-domain
+  lending-ui-rest --> lending-infrastructure
+  lending-domain --> shared-domain
+  library --> lending-ui-rest
+  library --> lending-domain
+  library --> lending-infrastructure
+`;
+
+const expectedGraphWithoutHeadLib = `graph LR
+  shared-infrastructure-nestjs-cqrs-events --> shared-domain
+  lending-infrastructure --> lending-application
+  lending-infrastructure --> shared-infrastructure-nestjs-cqrs-events
+  lending-infrastructure --> lending-domain
+  lending-infrastructure --> shared-domain
+  lending-application --> lending-domain
+  lending-application --> shared-domain
+  lending-application --> catalogue
+  lending-ui-rest --> lending-application
+  lending-ui-rest --> lending-domain
+  lending-ui-rest --> lending-infrastructure
+  lending-domain --> shared-domain
+  catalogue --> shared-domain
+  catalogue --> shared-infrastructure-nestjs-cqrs-events
 `;
