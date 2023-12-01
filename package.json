@@ -33,8 +33,8 @@
   },
   "homepage": "https://github.com/Fcmam5/nx-mermaid-grapher#readme",
   "devDependencies": {
-    "@stryker-mutator/core": "^7.1.1",
-    "@stryker-mutator/jest-runner": "^7.1.1",
+    "@stryker-mutator/core": "^8.0.0",
+    "@stryker-mutator/jest-runner": "^8.0.0",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.9",
     "@types/yargs": "^17.0.24",
