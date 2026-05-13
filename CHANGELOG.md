@@ -28,17 +28,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enabled GitHub Private Vulnerability Reporting.
 - `npm audit`: 0 vulnerabilities.
 
-## [1.1.0] - 2023-11-02
+## [1.1.0] - 2023-08-17
 
-See git history for details of this and earlier releases.
+### Added
 
-## [1.0.1]
+- `-e` / `--exclude` CLI option to exclude one or more libraries from the
+  generated graph ([#1]).
+- Contributing guide.
 
-See git history.
+## [1.0.1] - 2023-08-14
 
-## [1.0.0]
+### Fixed
 
-Initial public release.
+- Enumerate runtime dependencies (`class-transformer`, `yargs`) in
+  `package.json` so the package installs cleanly from npm.
+
+## [1.0.0] - 2023-08-12
+
+### Added
+
+- Initial public release of `nx-mermaid-grapher`.
+- CLI (`nx-mermaid-grapher -f <path>`) that converts an Nx dependency graph
+  JSON file into a Mermaid `graph LR` snippet.
+- Programmatic API exposing `NxMermaidGrapher`, `NXGraphFileLoader`, and
+  `DiGraph` for embedding or extending the tool.
+
+[#1]: https://github.com/Fcmam5/nx-mermaid-grapher/issues/1
 
 [Unreleased]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.1.0...HEAD
 [1.1.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.0.1...1.1.0
