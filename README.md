@@ -11,6 +11,10 @@ A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX depend
   - [Usage](#usage)
     - [CLI](#cli)
     - [Code](#code)
+  - [Recipes](#recipes)
+    - [Render only the libs affected by a PR](#render-only-the-libs-affected-by-a-pr)
+    - [Auto-post the affected graph as a PR comment (GitHub Actions)](#auto-post-the-affected-graph-as-a-pr-comment-github-actions)
+  - [Project documents](#project-documents)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -89,13 +93,14 @@ npx nx-mermaid-grapher -f file.json
 Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
+Usage: nx-mermaid-grapher -f <path> [-e <lib>]...
+
 Options:
-      --help     Show help                                             [boolean]
-      --version  Show version number                                   [boolean]
-  -f, --file     NX graph output file (see:
-                 https://nx.dev/packages/nx/documents/dep-graph#file)
-                                                             [string] [required]
-  -e, --exclude  Exclude a library                                       [array]
+  -f, --file <path>     NX graph output file
+                        (see: https://nx.dev/packages/nx/documents/dep-graph#file)
+  -e, --exclude <lib>   Exclude a library (repeatable)
+  -h, --help            Show help
+  -V, --version         Show version
 ```
 
 **Example**:
@@ -156,11 +161,88 @@ const myGraph = new SomeGraph();
 const core = new NxMermaidGrapher(loader, myGraph);
 ```
 
+## Recipes
+
+### Render only the libs affected by a PR
+
+`nx graph` can produce an _affected-only_ subset of the workspace graph as JSON,
+which `nx-mermaid-grapher` consumes as-is. Two commands are all you need:
+
+```bash
+# 1. Generate JSON for the projects affected against your target branch.
+npx nx graph --affected --file=affected.json --base=origin/develop
+
+# 2. Convert it into a Mermaid block ready to paste into a PR description.
+npx nx-mermaid-grapher -f affected.json
+```
+
+You can swap `--base=origin/develop` for `origin/main` (or any commit-ish) and
+combine with `-e <lib>` to hide noisy projects from the rendered graph.
+
+### Auto-post the affected graph as a PR comment (GitHub Actions)
+
+Drop the workflow below at `.github/workflows/affected-graph.yaml` to have a
+fresh dependency-impact diagram appear on every pull request:
+
+```yaml
+name: Affected dep graph
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Required so `--base=origin/${{ github.base_ref }}` has history.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate affected Mermaid graph
+        run: |
+          npx nx graph --affected --file=affected.json --base=origin/${{ github.base_ref }}
+          {
+            echo '## Affected dependency graph'
+            echo
+            npx nx-mermaid-grapher -f affected.json
+          } > graph.md
+
+      - name: Comment on the PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file graph.md
+```
+
+This posts a new comment on each push. If you would rather _update_ a single
+sticky comment in place, swap the last step for an action like
+[`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment).
+
+## Project documents
+
+- [Changelog](./CHANGELOG.md) — release history and notable changes.
+- [Contributing](./CONTRIBUTING.md) — how to set up the project and propose changes.
+- [Code of Conduct](./CODE_OF_CONDUCT.md) — community expectations.
+- [Security policy](./SECURITY.md) — how to report vulnerabilities.
+- [Privacy policy](./PRIVACY.md) — what data the tool does (and does not) handle.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+Please make sure to update tests as appropriate. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for development setup and the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## License
 
