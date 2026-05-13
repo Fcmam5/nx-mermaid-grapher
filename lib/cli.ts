@@ -7,7 +7,7 @@ import { DiGraph } from './data-structures/di-graph.ds';
 import { NXGraphFileLoader } from './nx/load-nx-graph';
 import { NxMermaidGrapher } from './core';
 
-const USAGE = `Usage: nx-mermaid-grapher -f <path> [-e <lib>]...
+export const USAGE = `Usage: nx-mermaid-grapher -f <path> [-e <lib>]...
 
 Options:
   -f, --file <path>     NX graph output file
@@ -16,22 +16,33 @@ Options:
   -h, --help            Show help
   -V, --version         Show version`;
 
+/**
+ * Thrown for expected, user-facing CLI errors (bad/missing args).
+ * Callers should print `err.message` + USAGE and exit non-zero.
+ */
+export class CliError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'CliError';
+  }
+}
+
 function readVersion(): string {
-  // dist/cli.js -> ../package.json
+  // dist/cli.js -> ../package.json (also works from lib/cli.ts in tests)
   const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
   return pkg.version as string;
 }
 
-function fail(message: string): never {
-  console.error(`error: ${message}\n\n${USAGE}`);
-  process.exit(1);
-}
-
-(() => {
+/**
+ * Parse `argv` and return the string that would be printed to stdout.
+ * Throws `CliError` for invalid input. Pure-ish: only side effect is reading
+ * the user-supplied graph file (and `package.json` for `--version`).
+ */
+export function run(argv: string[]): string {
   let parsed;
   try {
     parsed = parseArgs({
-      args: process.argv.slice(2),
+      args: argv,
       options: {
         file: { type: 'string', short: 'f' },
         exclude: { type: 'string', short: 'e', multiple: true },
@@ -42,33 +53,33 @@ function fail(message: string): never {
       allowPositionals: false,
     });
   } catch (err) {
-    fail((err as Error).message);
+    throw new CliError((err as Error).message);
   }
 
   const { values } = parsed;
 
-  if (values.help) {
-    console.log(USAGE);
-    return;
+  if (values.help) return USAGE;
+  if (values.version) return readVersion();
+
+  if (!values.file) {
+    throw new CliError('missing required option: -f, --file');
   }
 
-  if (values.version) {
-    console.log(readVersion());
-    return;
+  const core = new NxMermaidGrapher(new NXGraphFileLoader(), new DiGraph());
+  core.init(values.file);
+
+  return `\`\`\`mermaid\n${core.getGraphSnippet(values.exclude)}\`\`\``;
+}
+
+/* istanbul ignore next -- entry point, exercised via the integration smoke test */
+if (require.main === module) {
+  try {
+    console.log(run(process.argv.slice(2)));
+  } catch (err) {
+    if (err instanceof CliError) {
+      console.error(`error: ${err.message}\n\n${USAGE}`);
+      process.exit(1);
+    }
+    throw err;
   }
-
-  const file = values.file;
-  if (!file) {
-    fail('missing required option: -f, --file');
-  }
-
-  const loader = new NXGraphFileLoader();
-  const diGraph = new DiGraph();
-  const core = new NxMermaidGrapher(loader, diGraph);
-
-  core.init(file);
-
-  const logMerMaidInMd = (str: string) => `\`\`\`mermaid\n${str}\`\`\``;
-
-  console.log(logMerMaidInMd(core.getGraphSnippet(values.exclude)));
-})();
+}
