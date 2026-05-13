@@ -19,9 +19,10 @@
     "lint": "eslint \"lib/**/*.ts\" \"tests/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check lib/**/*.js",
+    "format:check": "prettier --check \"lib/**/*.ts\" \"tests/**/*.ts\"",
     "mutate": "stryker run",
     "prebuild": "rm -fr dist",
+    "prepublishOnly": "npm run lint && npm test && npm run build",
     "dev": "ts-node lib/cli.ts"
   },
   "repository": {

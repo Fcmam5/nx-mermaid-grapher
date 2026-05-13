@@ -25,7 +25,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the
-[nx-mermaid-grapher Code of Conduct](https://github.com/Fcmam5/nx-mermaid-grapherblob/master/CODE_OF_CONDUCT.md).
+[nx-mermaid-grapher Code of Conduct](./CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
 to [@Fcmam5](https://twitter.com/Fcmam5).
 
