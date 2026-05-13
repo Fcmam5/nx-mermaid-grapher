@@ -11,6 +11,9 @@ A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX depend
   - [Usage](#usage)
     - [CLI](#cli)
     - [Code](#code)
+  - [Recipes](#recipes)
+    - [Render only the libs affected by a PR](#render-only-the-libs-affected-by-a-pr)
+    - [Auto-post the affected graph as a PR comment (GitHub Actions)](#auto-post-the-affected-graph-as-a-pr-comment-github-actions)
   - [Project documents](#project-documents)
   - [Contributing](#contributing)
   - [License](#license)
@@ -157,6 +160,75 @@ const loader = new NXGraphFileLoader();
 const myGraph = new SomeGraph();
 const core = new NxMermaidGrapher(loader, myGraph);
 ```
+
+## Recipes
+
+### Render only the libs affected by a PR
+
+`nx graph` can produce an _affected-only_ subset of the workspace graph as JSON,
+which `nx-mermaid-grapher` consumes as-is. Two commands are all you need:
+
+```bash
+# 1. Generate JSON for the projects affected against your target branch.
+npx nx graph --affected --file=affected.json --base=origin/develop
+
+# 2. Convert it into a Mermaid block ready to paste into a PR description.
+npx nx-mermaid-grapher -f affected.json
+```
+
+You can swap `--base=origin/develop` for `origin/main` (or any commit-ish) and
+combine with `-e <lib>` to hide noisy projects from the rendered graph.
+
+### Auto-post the affected graph as a PR comment (GitHub Actions)
+
+Drop the workflow below at `.github/workflows/affected-graph.yaml` to have a
+fresh dependency-impact diagram appear on every pull request:
+
+```yaml
+name: Affected dep graph
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Required so `--base=origin/${{ github.base_ref }}` has history.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate affected Mermaid graph
+        run: |
+          npx nx graph --affected --file=affected.json --base=origin/${{ github.base_ref }}
+          {
+            echo '## Affected dependency graph'
+            echo
+            npx nx-mermaid-grapher -f affected.json
+          } > graph.md
+
+      - name: Comment on the PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file graph.md
+```
+
+This posts a new comment on each push. If you would rather _update_ a single
+sticky comment in place, swap the last step for an action like
+[`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment).
 
 ## Project documents
 
