@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `build:dev` script (source maps for local debugging).
 - New CLI exports `run(argv)` and `CliError` from `lib/cli` for programmatic use
   and testing.
+- `NXGraphFileLoader.readNXGraph` now validates the parsed JSON and throws a
+  descriptive error if the file is not a recognisable Nx graph dump (missing
+  `graph`, `graph.nodes`, or `graph.dependencies`).
 
 ### Changed
 
