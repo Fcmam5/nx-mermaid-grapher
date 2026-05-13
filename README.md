@@ -11,6 +11,7 @@ A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX depend
   - [Usage](#usage)
     - [CLI](#cli)
     - [Code](#code)
+  - [Project documents](#project-documents)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -89,13 +90,14 @@ npx nx-mermaid-grapher -f file.json
 Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
+Usage: nx-mermaid-grapher -f <path> [-e <lib>]...
+
 Options:
-      --help     Show help                                             [boolean]
-      --version  Show version number                                   [boolean]
-  -f, --file     NX graph output file (see:
-                 https://nx.dev/packages/nx/documents/dep-graph#file)
-                                                             [string] [required]
-  -e, --exclude  Exclude a library                                       [array]
+  -f, --file <path>     NX graph output file
+                        (see: https://nx.dev/packages/nx/documents/dep-graph#file)
+  -e, --exclude <lib>   Exclude a library (repeatable)
+  -h, --help            Show help
+  -V, --version         Show version
 ```
 
 **Example**:
@@ -156,11 +158,19 @@ const myGraph = new SomeGraph();
 const core = new NxMermaidGrapher(loader, myGraph);
 ```
 
+## Project documents
+
+- [Changelog](./CHANGELOG.md) — release history and notable changes.
+- [Contributing](./CONTRIBUTING.md) — how to set up the project and propose changes.
+- [Code of Conduct](./CODE_OF_CONDUCT.md) — community expectations.
+- [Security policy](./SECURITY.md) — how to report vulnerabilities.
+- [Privacy policy](./PRIVACY.md) — what data the tool does (and does not) handle.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+Please make sure to update tests as appropriate. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for development setup and the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## License
 
