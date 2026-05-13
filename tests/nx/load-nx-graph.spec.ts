@@ -17,4 +17,17 @@ describe('NXGraphFileLoader', () => {
 
     expect(readFileSync).toHaveBeenCalled();
   });
+
+  it.each([
+    ['null', 'null', /expected an Nx graph JSON object, got null/],
+    ['a non-object', '"hello"', /expected an Nx graph JSON object, got string/],
+    ['an array (no graph key)', '[]', /missing required "graph" object/],
+    ['an object missing "graph"', '{}', /missing required "graph" object/],
+    ['an object with non-object "graph"', '{"graph":1}', /missing required "graph" object/],
+    ['a graph missing "nodes"', '{"graph":{"dependencies":{}}}', /missing required "graph\.nodes" object/],
+    ['a graph missing "dependencies"', '{"graph":{"nodes":{}}}', /missing required "graph\.dependencies" object/],
+  ])('throws a descriptive error when the JSON is %s', (_, json, expected) => {
+    (readFileSync as jest.Mock).mockReturnValue(json);
+    expect(() => loader.readNXGraph('bad.json')).toThrow(expected);
+  });
 });

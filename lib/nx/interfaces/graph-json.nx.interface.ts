@@ -16,10 +16,3 @@ export interface GraphJsonResponse {
    */
   criticalPath?: string[];
 }
-
-export class GraphJsonResponseCls implements GraphJsonResponse {
-  tasks?: TaskGraph | undefined;
-  graph!: ProjectGraph;
-  affectedProjects?: string[] | undefined;
-  criticalPath?: string[] | undefined;
-}

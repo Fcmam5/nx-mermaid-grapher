@@ -11,17 +11,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `SECURITY.md` and `PRIVACY.md`.
 - `build:dev` script (source maps for local debugging).
+- New CLI exports `run(argv)` and `CliError` from `lib/cli` for programmatic use
+  and testing.
+- `NXGraphFileLoader.readNXGraph` now validates the parsed JSON and throws a
+  descriptive error if the file is not a recognisable Nx graph dump (missing
+  `graph`, `graph.nodes`, or `graph.dependencies`).
 
 ### Changed
 
 - **BREAKING:** require Node.js `>=22`.
 - Migrated ESLint to v10 flat config (`eslint.config.js`).
-- Upgraded TypeScript to 6, ESLint to 10, Jest/ts-jest to 30, Stryker to 9, yargs to 18, and other dev dependencies to latest.
+- Upgraded TypeScript to 6, ESLint to 10, Jest/ts-jest to 30, Stryker to 9, and other dev dependencies to latest.
 - `build` no longer emits source maps; published tarball is ~21% smaller.
+- Refactored `lib/cli.ts` to expose a pure `run(argv): string` entry point and a
+  `CliError` class; the script is now executed only when invoked directly
+  (`require.main === module`). Test coverage on `cli.ts` went from 0% to 100%.
+- Internal cleanup of `core.ts` and `di-graph.ds.ts`: linear-time
+  `getGraphSnippet` (was quadratic in shape due to array spreading), `Set`-based
+  exclusion lookup in `filterOutLibs`, and a properly typed `Map<string, string[]>`
+  in `DiGraph`. No user-visible behavior change.
 
 ### Removed
 
 - `prettier-eslint` dev dependency.
+- `class-transformer` runtime dependency. The previous `plainToClass` call was a
+  no-op (the target class had no decorators); replaced with a plain
+  `JSON.parse(...) as GraphJsonResponse` cast and removed the unused
+  `GraphJsonResponseCls` class.
+- `yargs` runtime dependency. CLI argument parsing now uses Node's built-in
+  `util.parseArgs` (stable since Node 18, available on our Node `>=22` floor).
+  The published package now has **zero runtime dependencies**.
 
 ### Security
 

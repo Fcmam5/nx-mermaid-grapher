@@ -1,14 +1,15 @@
 import { IGraph } from './graph.ds.interface';
 
 export class DiGraph implements IGraph<string> {
-  private nodes = new Map();
+  private nodes = new Map<string, string[]>();
 
   addNode(nodeVal: string) {
     this.nodes.set(nodeVal, []);
   }
 
   addEdge(source: string, destination: string) {
-    if (!this.nodes.has(source)) {
+    const sourceEdges = this.nodes.get(source);
+    if (!sourceEdges) {
       throw new Error('Source node not found!');
     }
 
@@ -16,7 +17,7 @@ export class DiGraph implements IGraph<string> {
       throw new Error('Destination node not found!');
     }
 
-    this.nodes.get(source).push(destination);
+    sourceEdges.push(destination);
   }
 
   getGraph() {
