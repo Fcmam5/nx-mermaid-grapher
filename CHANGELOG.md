@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `SECURITY.md` and `PRIVACY.md`.
 - `build:dev` script (source maps for local debugging).
+- New CLI exports `run(argv)` and `CliError` from `lib/cli` for programmatic use
+  and testing.
 
 ### Changed
 
@@ -18,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated ESLint to v10 flat config (`eslint.config.js`).
 - Upgraded TypeScript to 6, ESLint to 10, Jest/ts-jest to 30, Stryker to 9, and other dev dependencies to latest.
 - `build` no longer emits source maps; published tarball is ~21% smaller.
+- Refactored `lib/cli.ts` to expose a pure `run(argv): string` entry point and a
+  `CliError` class; the script is now executed only when invoked directly
+  (`require.main === module`). Test coverage on `cli.ts` went from 0% to 100%.
+- Internal cleanup of `core.ts` and `di-graph.ds.ts`: linear-time
+  `getGraphSnippet` (was quadratic in shape due to array spreading), `Set`-based
+  exclusion lookup in `filterOutLibs`, and a properly typed `Map<string, string[]>`
+  in `DiGraph`. No user-visible behavior change.
 
 ### Removed
 
