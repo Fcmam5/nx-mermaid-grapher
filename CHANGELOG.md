@@ -16,12 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **BREAKING:** require Node.js `>=22`.
 - Migrated ESLint to v10 flat config (`eslint.config.js`).
-- Upgraded TypeScript to 6, ESLint to 10, Jest/ts-jest to 30, Stryker to 9, yargs to 18, and other dev dependencies to latest.
+- Upgraded TypeScript to 6, ESLint to 10, Jest/ts-jest to 30, Stryker to 9, and other dev dependencies to latest.
 - `build` no longer emits source maps; published tarball is ~21% smaller.
 
 ### Removed
 
 - `prettier-eslint` dev dependency.
+- `class-transformer` runtime dependency. The previous `plainToClass` call was a
+  no-op (the target class had no decorators); replaced with a plain
+  `JSON.parse(...) as GraphJsonResponse` cast and removed the unused
+  `GraphJsonResponseCls` class.
+- `yargs` runtime dependency. CLI argument parsing now uses Node's built-in
+  `util.parseArgs` (stable since Node 18, available on our Node `>=22` floor).
+  The published package now has **zero runtime dependencies**.
 
 ### Security
 
