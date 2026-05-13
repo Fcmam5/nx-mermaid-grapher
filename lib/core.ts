@@ -16,21 +16,13 @@ export class NxMermaidGrapher {
   }
 
   getGraphSnippet(excludedLibs: string[] = []) {
-    const initStr = `graph LR\n`;
-    const graphObj = this.graph.getGraph();
-    const rs = this.filterOutLibs(graphObj, excludedLibs);
+    const rs = this.filterOutLibs(this.graph.getGraph(), excludedLibs);
 
-    return Object.keys(rs)
-      .filter((libName) => {
-        return rs[libName].length;
-      })
-      .reduce((resultString, currLibName) => {
-        const lines = rs[currLibName].reduce((acc: string[], dependency: string) => {
-          return [...acc, `  ${currLibName} --> ${dependency}\n`];
-        }, []);
+    const lines = Object.keys(rs)
+      .filter((lib) => rs[lib].length)
+      .flatMap((lib) => rs[lib].map((dep) => `  ${lib} --> ${dep}\n`));
 
-        return `${resultString}${lines.join('')}`;
-      }, initStr);
+    return `graph LR\n${lines.join('')}`;
   }
 
   private toDiGraph(): void {
@@ -50,14 +42,14 @@ export class NxMermaidGrapher {
       return graphEdges;
     }
 
-    const _graphEdges = { ...graphEdges };
+    const excluded = new Set(excludedLibs);
+    const result: Edges<string> = {};
 
-    excludedLibs.forEach((lib) => delete _graphEdges[lib]);
+    for (const [lib, deps] of Object.entries(graphEdges)) {
+      if (excluded.has(lib)) continue;
+      result[lib] = deps.filter((dep) => !excluded.has(dep));
+    }
 
-    Object.keys(_graphEdges).forEach((edge) => {
-      _graphEdges[edge] = _graphEdges[edge].filter((node) => !excludedLibs.includes(node));
-    });
-
-    return _graphEdges;
+    return result;
   }
 }
