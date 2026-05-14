@@ -80,6 +80,30 @@ describe('Library core', () => {
     it('should get a graph without excluded head library', () => {
       expect(coreCls.getGraphSnippet(['library'])).toEqual(expectedGraphWithoutHeadLib);
     });
+
+    it('should get a graph with only selected libraries', () => {
+      const out = coreCls.getGraphSnippet([], 'mermaid', [
+        'lending-infrastructure',
+        'lending-application',
+        'lending-domain',
+      ]);
+      expect(out).toContain('lending-infrastructure --> lending-application');
+      expect(out).toContain('lending-application --> lending-domain');
+      expect(out).not.toContain('catalogue');
+      expect(out).not.toContain('library');
+      expect(out).not.toContain('shared-infrastructure-nestjs-cqrs-events');
+    });
+
+    it('should compose exclude and selectLibs for affected-project filtering', () => {
+      const out = coreCls.getGraphSnippet(['library'], 'mermaid', [
+        'lending-infrastructure',
+        'lending-application',
+        'lending-domain',
+      ]);
+      expect(out).toContain('lending-infrastructure --> lending-application');
+      expect(out).not.toContain('library');
+      expect(out).not.toContain('catalogue');
+    });
   });
 
   describe('.getGraphSnippetForLib', () => {

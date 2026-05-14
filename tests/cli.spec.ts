@@ -48,6 +48,15 @@ describe('CLI run()', () => {
     expect(out).not.toMatch(new RegExp(`--> ${excluded}(\\n|$)`));
   });
 
+  it('honours --projects (repeatable) by keeping only the specified libs', () => {
+    const out = run(['-f', FIXTURE, '-p', 'lending-infrastructure', '-p', 'lending-application']);
+
+    expect(out).toContain('lending-infrastructure --> lending-application');
+    expect(out).not.toContain('lending-domain');
+    expect(out).not.toContain('catalogue');
+    expect(out).not.toContain('library');
+  });
+
   it('returns USAGE for --help', () => {
     expect(run(['--help'])).toBe(USAGE);
     expect(run(['-h'])).toBe(USAGE);

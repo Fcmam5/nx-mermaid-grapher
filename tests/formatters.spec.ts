@@ -1,5 +1,5 @@
 import { Edges } from '../lib/data-structures/graph.ds.interface';
-import { OUTPUT_FORMATS, OutputFormat, excludeLibs, formatGraph, isOutputFormat } from '../lib/formatters';
+import { OUTPUT_FORMATS, OutputFormat, excludeLibs, formatGraph, isOutputFormat, selectLibs } from '../lib/formatters';
 
 const SAMPLE: Edges<string> = {
   a: ['b', 'c'],
@@ -136,5 +136,31 @@ describe('excludeLibs', () => {
   it('composes with formatGraph for AI-agent style filtering', () => {
     const out = formatGraph(excludeLibs(SAMPLE, ['b']), 'edges');
     expect(out).toBe('a c\n');
+  });
+});
+
+describe('selectLibs', () => {
+  it('returns the input reference unchanged when no libs are selected', () => {
+    expect(selectLibs(SAMPLE, [])).toBe(SAMPLE);
+  });
+
+  it('keeps only the specified libs and edges between them', () => {
+    const out = selectLibs(SAMPLE, ['a', 'b']);
+    expect(out).toEqual({ a: ['b'], b: [] });
+    expect(SAMPLE).toEqual({ a: ['b', 'c'], b: ['c'], c: [] });
+  });
+
+  it('drops edges to libs outside the allowlist', () => {
+    const out = selectLibs(SAMPLE, ['a', 'c']);
+    expect(out).toEqual({ a: ['c'], c: [] });
+  });
+
+  it('produces an empty graph when none of the libs exist', () => {
+    expect(selectLibs(SAMPLE, ['x', 'y'])).toEqual({});
+  });
+
+  it('composes with excludeLibs for affected-project filtering', () => {
+    const out = formatGraph(selectLibs(excludeLibs(SAMPLE, ['c']), ['a', 'b']), 'edges');
+    expect(out).toBe('a b\n');
   });
 });

@@ -106,7 +106,7 @@ npx nx-mermaid-grapher -f file.json
 Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
-Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [--raw]
+Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [-p <lib>]... [--raw]
 
 Options:
   -f, --file <path>      NX graph output file. Pass `-` to read from stdin
@@ -115,6 +115,8 @@ Options:
   -o, --format <format>  Output format (default: mermaid).
                          One of: mermaid, edges, json, dot, stats
   -e, --exclude <lib>    Exclude a library (repeatable)
+  -p, --projects <lib>   Include only these libraries (repeatable).
+                         Useful for rendering affected-project subgraphs.
       --raw              Emit raw Mermaid (no ```mermaid markdown fence)
   -h, --help             Show help
   -V, --version          Show version
@@ -261,19 +263,28 @@ const core = new NxMermaidGrapher(loader, myGraph);
 
 ### Render only the libs affected by a PR
 
-`nx graph` can produce an _affected-only_ subset of the workspace graph as JSON,
-which `nx-mermaid-grapher` consumes as-is. Two commands are all you need:
+> **Note:** `nx graph --affected --file=affected.json` does **not** produce a
+> JSON dump that contains only the affected projects. It outputs the full
+> workspace graph (the `--affected` flag was historically used for the browser
+> UI only). The `affectedProjects` field in the JSON was deprecated and
+> removed in Nx 19.1.1 (see [nrwl/nx#26501](https://github.com/nrwl/nx/issues/26501)).
+>
+> To get an actual affected-only subgraph, combine the two commands below:
 
 ```bash
-# 1. Generate JSON for the projects affected against your target branch.
-npx nx graph --affected --file=affected.json --base=origin/develop
+# 1. Dump the *full* workspace graph (once).
+npx nx graph --file=graph.json
 
-# 2. Convert it into a Mermaid block ready to paste into a PR description.
-npx nx-mermaid-grapher -f affected.json
+# 2. Get the names of affected projects and render only those.
+#    Requires `jq`; adjust --base to your target branch.
+npx nx-mermaid-grapher -f graph.json \
+  $(npx nx show projects --affected --json --base=origin/develop \
+    | jq -r '.[] | "-p " + .')
 ```
 
 You can swap `--base=origin/develop` for `origin/main` (or any commit-ish) and
-combine with `-e <lib>` to hide noisy projects from the rendered graph.
+still combine with `-e <lib>` to hide noisy projects in addition to the
+affected filter.
 
 ### Auto-post the affected graph as a PR comment (GitHub Actions)
 
@@ -309,11 +320,17 @@ jobs:
 
       - name: Generate affected Mermaid graph
         run: |
-          npx nx graph --affected --file=affected.json --base=origin/${{ github.base_ref }}
+          # 1. Dump the full workspace graph.
+          npx nx graph --file=graph.json
+
+          # 2. Get affected project names and build -p flags.
+          PROJECTS=$(npx nx show projects --affected --json --base=origin/${{ github.base_ref }} | jq -r '.[] | "-p " + .' | xargs)
+
+          # 3. Render the subgraph.
           {
             echo '## Affected dependency graph'
             echo
-            npx nx-mermaid-grapher -f affected.json
+            npx nx-mermaid-grapher -f graph.json $PROJECTS
           } > graph.md
 
       - name: Comment on the PR

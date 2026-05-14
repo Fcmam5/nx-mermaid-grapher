@@ -8,7 +8,7 @@ import { isOutputFormat, OUTPUT_FORMATS } from './formatters';
 import { NXGraphFileLoader, STDIN_PATH } from './nx/load-nx-graph';
 import { NxMermaidGrapher } from './core';
 
-export const USAGE = `Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [--raw]
+export const USAGE = `Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [-p <lib>]... [--raw]
 
 Options:
   -f, --file <path>      NX graph output file. Pass \`-\` to read from stdin
@@ -17,6 +17,8 @@ Options:
   -o, --format <format>  Output format (default: mermaid).
                          One of: ${OUTPUT_FORMATS.join(', ')}
   -e, --exclude <lib>    Exclude a library (repeatable)
+  -p, --projects <lib>   Include only these libraries (repeatable).
+                         Useful for rendering affected-project subgraphs.
       --raw              Emit raw Mermaid (no \`\`\`mermaid markdown fence)
   -h, --help             Show help
   -V, --version          Show version`;
@@ -53,6 +55,7 @@ export function run(argv: string[]): string {
         stdin: { type: 'boolean' },
         format: { type: 'string', short: 'o' },
         exclude: { type: 'string', short: 'e', multiple: true },
+        projects: { type: 'string', short: 'p', multiple: true },
         raw: { type: 'boolean' },
         help: { type: 'boolean', short: 'h' },
         version: { type: 'boolean', short: 'V' },
@@ -85,7 +88,8 @@ export function run(argv: string[]): string {
   const core = new NxMermaidGrapher(new NXGraphFileLoader(), new DiGraph());
   core.init(inputPath);
 
-  const body = core.getGraphSnippet(values.exclude, format);
+  const selected = values.projects?.length ? values.projects : undefined;
+  const body = core.getGraphSnippet(values.exclude, format, selected);
 
   // Wrap Mermaid output in a markdown code fence by default so users can paste
   // it straight into a PR description or README. Use --raw to opt out.
