@@ -71,8 +71,14 @@ function formatEdges(edges: Edges<string>): string {
 }
 
 function formatJson(edges: Edges<string>): string {
-  const nodes = Object.keys(edges);
-  const edgeList: [string, string][] = nodes.flatMap((src) => edges[src].map((dst) => [src, dst] as [string, string]));
+  const ids = new Set<string>(Object.keys(edges));
+  for (const targets of Object.values(edges)) {
+    for (const dst of targets) ids.add(dst);
+  }
+  const nodes = [...ids];
+  const edgeList: [string, string][] = nodes.flatMap(
+    (src) => edges[src]?.map((dst) => [src, dst] as [string, string]) ?? [],
+  );
   return JSON.stringify({ nodes, edges: edgeList });
 }
 

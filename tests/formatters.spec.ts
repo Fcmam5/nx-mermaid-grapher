@@ -55,6 +55,14 @@ describe('formatGraph', () => {
     it('is single-line (compact) so it is cheap to consume', () => {
       expect(formatGraph(SAMPLE, 'json')).not.toContain('\n');
     });
+
+    it('includes nodes that are only targets and never sources', () => {
+      const out = formatGraph({ a: ['b'] }, 'json');
+      const parsed = JSON.parse(out) as { nodes: string[]; edges: [string, string][] };
+      expect(parsed.nodes).toContain('a');
+      expect(parsed.nodes).toContain('b');
+      expect(parsed.edges).toEqual([['a', 'b']]);
+    });
   });
 
   describe('dot', () => {
