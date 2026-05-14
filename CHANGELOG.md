@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     sorted by most depended-on first.
 - New `--raw` flag to emit Mermaid without the surrounding
   `` ```mermaid `` markdown fence.
+- **Read from stdin** via `--stdin` (or the idiomatic `-f -`). Lets agents
+  and CI steps pipe `nx graph --file=/dev/stdout` straight into the tool
+  without round-tripping through a temp file. Mutually exclusive with `-f`.
 - Public exports `formatGraph`, `isOutputFormat`, `OUTPUT_FORMATS`, and the
   `OutputFormat` type from `lib/formatters` for programmatic use.
 - Public exports `computeStats`, `GraphStats`, and `ProjectStats` from

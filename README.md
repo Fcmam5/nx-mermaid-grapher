@@ -106,12 +106,14 @@ npx nx-mermaid-grapher -f file.json
 Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
-Usage: nx-mermaid-grapher -f <path> [-o <format>] [-e <lib>]... [--raw]
+Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [--raw]
 
 Options:
-  -f, --file <path>      NX graph output file
+  -f, --file <path>      NX graph output file. Pass `-` to read from stdin
                          (see: https://nx.dev/packages/nx/documents/dep-graph#file)
-  -o, --format <format>  Output format: mermaid | edges | json | dot (default: mermaid)
+      --stdin            Read the graph JSON from stdin (alias for `-f -`)
+  -o, --format <format>  Output format (default: mermaid).
+                         One of: mermaid, edges, json, dot, stats
   -e, --exclude <lib>    Exclude a library (repeatable)
       --raw              Emit raw Mermaid (no ```mermaid markdown fence)
   -h, --help             Show help
@@ -128,6 +130,13 @@ Optionally you can exclude one, or multiple libraries. For example:
 
 ```bash
 npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json -e lending-infrastructure -e lending-ui-rest
+```
+
+Or skip the temp file entirely and pipe `nx graph`'s output straight in:
+
+```bash
+nx graph --file=/dev/stdout | npx nx-mermaid-grapher --stdin -o stats
+# (or the idiomatic form: `... | npx nx-mermaid-grapher -f -`)
 ```
 
 #### Output formats

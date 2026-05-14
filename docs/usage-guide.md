@@ -37,6 +37,18 @@ npx nx graph --affected --file=affected.json --base=origin/develop
 `nx-mermaid-grapher` then reads that file and emits whichever format you ask
 for on stdout.
 
+If you would rather not write a temp file at all — for example in an AI agent
+loop or a CI step — pipe the JSON directly into the CLI on stdin:
+
+```bash
+nx graph --file=/dev/stdout | npx nx-mermaid-grapher --stdin -o stats
+# `--stdin` is an alias for the idiomatic `-f -`:
+nx graph --file=/dev/stdout | npx nx-mermaid-grapher -f -
+```
+
+`--stdin` and `-f` are mutually exclusive. The error you get when both are
+passed is intentional — it usually means the upstream pipeline is wrong.
+
 ## The output formats
 
 Pick one with `-o <format>` (or `--format <format>`). The default is `mermaid`.

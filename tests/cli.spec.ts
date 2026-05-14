@@ -1,7 +1,33 @@
+// Wrap readFileSync in a jest.fn that delegates to the real implementation by
+// default, so individual tests can override it (e.g. to simulate stdin reads
+// from fd 0) without breaking unrelated reads.
+jest.mock('node:fs', () => {
+  const actual = jest.requireActual('node:fs');
+  return { ...actual, readFileSync: jest.fn(actual.readFileSync) };
+});
+
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { CliError, run, USAGE } from '../lib/cli';
 
 const FIXTURE = join(__dirname, 'mocks', 'ddd-example.graph.json');
+const realReadFileSync = jest.requireActual('node:fs').readFileSync as typeof readFileSync;
+const FIXTURE_CONTENT = realReadFileSync(FIXTURE, 'utf-8') as string;
+const mockedReadFileSync = readFileSync as unknown as jest.MockedFunction<typeof readFileSync>;
+
+/** Have any read of fd 0 (stdin) return the bundled fixture content. */
+function withStdinFixture<T>(fn: () => T): T {
+  mockedReadFileSync.mockImplementation(((path: unknown, ...args: unknown[]) => {
+    if (path === 0) return FIXTURE_CONTENT;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (realReadFileSync as any)(path, ...args);
+  }) as typeof readFileSync);
+  try {
+    return fn();
+  } finally {
+    mockedReadFileSync.mockImplementation(realReadFileSync);
+  }
+}
 
 describe('CLI run()', () => {
   it('renders a Mermaid markdown block for a known fixture', () => {
@@ -32,9 +58,26 @@ describe('CLI run()', () => {
     expect(out).toMatch(/^\d+\.\d+\.\d+/);
   });
 
-  it('throws CliError when -f is missing', () => {
+  it('throws CliError when neither -f nor --stdin is given', () => {
     expect(() => run([])).toThrow(CliError);
-    expect(() => run([])).toThrow(/missing required option/i);
+    expect(() => run([])).toThrow(/missing required option.*--stdin/i);
+  });
+
+  it('throws CliError when --stdin and -f are combined', () => {
+    expect(() => run(['--stdin', '-f', FIXTURE])).toThrow(/mutually exclusive/i);
+  });
+
+  describe('stdin input', () => {
+    it('reads the graph from stdin when --stdin is passed', () => {
+      const out = withStdinFixture(() => run(['--stdin']));
+      expect(out).toContain('graph LR\n');
+      expect(out).toContain('lending-infrastructure --> lending-application');
+    });
+
+    it('also accepts the idiomatic `-f -` form', () => {
+      const out = withStdinFixture(() => run(['-f', '-', '-o', 'edges']));
+      expect(out).toContain('lending-infrastructure lending-application');
+    });
   });
 
   it('throws CliError on unknown options', () => {

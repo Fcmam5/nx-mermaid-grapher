@@ -5,14 +5,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DiGraph } from './data-structures/di-graph.ds';
 import { isOutputFormat, OUTPUT_FORMATS } from './formatters';
-import { NXGraphFileLoader } from './nx/load-nx-graph';
+import { NXGraphFileLoader, STDIN_PATH } from './nx/load-nx-graph';
 import { NxMermaidGrapher } from './core';
 
-export const USAGE = `Usage: nx-mermaid-grapher -f <path> [-o <format>] [-e <lib>]... [--raw]
+export const USAGE = `Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [--raw]
 
 Options:
-  -f, --file <path>      NX graph output file
+  -f, --file <path>      NX graph output file. Pass \`-\` to read from stdin
                          (see: https://nx.dev/packages/nx/documents/dep-graph#file)
+      --stdin            Read the graph JSON from stdin (alias for \`-f -\`)
   -o, --format <format>  Output format (default: mermaid).
                          One of: ${OUTPUT_FORMATS.join(', ')}
   -e, --exclude <lib>    Exclude a library (repeatable)
@@ -49,6 +50,7 @@ export function run(argv: string[]): string {
       args: argv,
       options: {
         file: { type: 'string', short: 'f' },
+        stdin: { type: 'boolean' },
         format: { type: 'string', short: 'o' },
         exclude: { type: 'string', short: 'e', multiple: true },
         raw: { type: 'boolean' },
@@ -67,8 +69,12 @@ export function run(argv: string[]): string {
   if (values.help) return USAGE;
   if (values.version) return readVersion();
 
-  if (!values.file) {
-    throw new CliError('missing required option: -f, --file');
+  const inputPath = values.stdin ? STDIN_PATH : values.file;
+  if (!inputPath) {
+    throw new CliError('missing required option: -f, --file (or --stdin)');
+  }
+  if (values.stdin && values.file) {
+    throw new CliError('--stdin and -f/--file are mutually exclusive');
   }
 
   const format = values.format ?? 'mermaid';
@@ -77,7 +83,7 @@ export function run(argv: string[]): string {
   }
 
   const core = new NxMermaidGrapher(new NXGraphFileLoader(), new DiGraph());
-  core.init(values.file);
+  core.init(inputPath);
 
   const body = core.getGraphSnippet(values.exclude, format);
 
