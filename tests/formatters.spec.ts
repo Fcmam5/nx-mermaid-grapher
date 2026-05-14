@@ -1,5 +1,5 @@
 import { Edges } from '../lib/data-structures/graph.ds.interface';
-import { OUTPUT_FORMATS, OutputFormat, formatGraph, isOutputFormat } from '../lib/formatters';
+import { OUTPUT_FORMATS, OutputFormat, excludeLibs, formatGraph, isOutputFormat } from '../lib/formatters';
 
 const SAMPLE: Edges<string> = {
   a: ['b', 'c'],
@@ -105,5 +105,28 @@ describe('formatGraph', () => {
     for (const fmt of OUTPUT_FORMATS) {
       expect(typeof formatGraph(SAMPLE, fmt as OutputFormat)).toBe('string');
     }
+  });
+});
+
+describe('excludeLibs', () => {
+  it('returns the input reference unchanged when no libs are excluded', () => {
+    expect(excludeLibs(SAMPLE, [])).toBe(SAMPLE);
+  });
+
+  it('drops the excluded libs as both sources and targets', () => {
+    const out = excludeLibs(SAMPLE, ['b']);
+    expect(out).toEqual({ a: ['c'], c: [] });
+    // Original is untouched.
+    expect(SAMPLE).toEqual({ a: ['b', 'c'], b: ['c'], c: [] });
+  });
+
+  it('handles multiple exclusions and never leaves dangling edges', () => {
+    const out = excludeLibs(SAMPLE, ['b', 'c']);
+    expect(out).toEqual({ a: [] });
+  });
+
+  it('composes with formatGraph for AI-agent style filtering', () => {
+    const out = formatGraph(excludeLibs(SAMPLE, ['b']), 'edges');
+    expect(out).toBe('a c\n');
   });
 });

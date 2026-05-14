@@ -373,6 +373,12 @@ import { computeStats, type GraphStats } from 'nx-mermaid-grapher';
 const stats: GraphStats = computeStats({ a: ['b', 'c'], b: ['c'], c: [] });
 //   { nodes: 3, edges: 3, roots: ['a'], leaves: ['c'], hasCycles: false,
 //     maxDepth: 2, longestPath: ['a', 'b', 'c'], projects: [...] }
+
+// Need stats or a rendered graph with some libs filtered out? Compose
+// `excludeLibs` with either:
+import { excludeLibs } from 'nx-mermaid-grapher';
+const trimmedStats = computeStats(excludeLibs(graph, ['noisy-lib']));
+const trimmedDot = formatGraph(excludeLibs(graph, ['noisy-lib']), 'dot');
 ```
 
 You can also bring your own graph data structure by implementing `IGraph<T>`

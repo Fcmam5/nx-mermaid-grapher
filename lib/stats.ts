@@ -41,7 +41,16 @@ export interface GraphStats {
  * dependency graphs comfortably larger than any real-world Nx workspace.
  */
 export function computeStats(graph: Edges<string>): GraphStats {
-  const nodes = Object.keys(graph);
+  // Build the node set from keys ∪ targets so we are robust to hand-rolled
+  // `Edges<string>` values where a dependency target was not declared as its
+  // own key. (The loader and `DiGraph` always declare targets, so this only
+  // matters for direct callers of the public API.)
+  const declared = new Set<string>(Object.keys(graph));
+  for (const targets of Object.values(graph)) {
+    for (const t of targets) declared.add(t);
+  }
+  const nodes = [...declared];
+
   const fanIn = new Map<string, number>();
   const fanOut = new Map<string, number>();
   for (const n of nodes) {
@@ -49,13 +58,9 @@ export function computeStats(graph: Edges<string>): GraphStats {
     fanOut.set(n, 0);
   }
 
-  // Invariant: every dependency target is also a declared node (the loader
-  // and `DiGraph` both ensure this), so we can index the maps without `??`
-  // fallbacks. If you pass a hand-rolled `Edges<string>` with dangling
-  // targets, declare them as keys with an empty array first.
   let edgeCount = 0;
   for (const src of nodes) {
-    const targets = graph[src];
+    const targets = graph[src] ?? [];
     fanOut.set(src, targets.length);
     edgeCount += targets.length;
     for (const dst of targets) {
@@ -84,7 +89,7 @@ export function computeStats(graph: Edges<string>): GraphStats {
     }
     color.set(n, GRAY);
     let best: { depth: number; path: string[] } = { depth: 0, path: [n] };
-    for (const child of graph[n]) {
+    for (const child of graph[n] ?? []) {
       const sub = dfs(child);
       if (sub.depth + 1 > best.depth) {
         best = { depth: sub.depth + 1, path: [n, ...sub.path] };

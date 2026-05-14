@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Public exports `computeStats`, `GraphStats`, and `ProjectStats` from
   `lib/stats` for callers that want the structured stats data instead of the
   rendered text summary.
+- New `excludeLibs(graph, excluded)` export. Lifts the previously-private
+  filtering logic out of `NxMermaidGrapher` so programmatic callers can
+  compose it with `formatGraph` and `computeStats`
+  (e.g. `computeStats(excludeLibs(graph, ['noisy-lib']))`).
 - `NXGraphFileLoader.readNXGraph` now validates the parsed JSON and throws a
   descriptive error if the file is not a recognisable Nx graph dump (missing
   `graph`, `graph.nodes`, or `graph.dependencies`).

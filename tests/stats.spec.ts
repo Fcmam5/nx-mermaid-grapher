@@ -87,6 +87,28 @@ describe('computeStats', () => {
     expect(s.projects.map((p) => p.name)).toEqual(['c', 'b', 'a']);
   });
 
+  it('handles hand-rolled graphs whose targets are not declared as keys', () => {
+    // `b` and `c` only exist as edge targets — never declared with their own
+    // key. Public-API callers shouldn't crash or get NaN counts.
+    const g = { a: ['b', 'c'] } as Edges<string>;
+    const s = computeStats(g);
+
+    expect(s.nodes).toBe(3);
+    expect(s.edges).toBe(2);
+    expect(s.roots).toEqual(['a']);
+    expect(s.leaves.sort()).toEqual(['b', 'c']);
+    expect(s.hasCycles).toBe(false);
+    expect(s.maxDepth).toBe(1);
+
+    const fan = Object.fromEntries(s.projects.map((p) => [p.name, [p.fanIn, p.fanOut]]));
+    expect(fan).toEqual({ a: [0, 2], b: [1, 0], c: [1, 0] });
+    // No NaN sneaking into any count:
+    for (const p of s.projects) {
+      expect(Number.isFinite(p.fanIn)).toBe(true);
+      expect(Number.isFinite(p.fanOut)).toBe(true);
+    }
+  });
+
   it('produces a stable per-project order for ties (name ascending)', () => {
     const g: Edges<string> = { z: ['x'], y: ['x'], x: [] };
     const s = computeStats(g);

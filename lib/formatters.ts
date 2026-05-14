@@ -1,6 +1,24 @@
 import { Edges } from './data-structures/graph.ds.interface';
 import { computeStats } from './stats';
 
+/**
+ * Return a copy of `graph` with the given libraries removed both as sources
+ * and as targets. Useful for trimming noise before rendering or computing
+ * stats — e.g. `formatGraph(excludeLibs(g, ['noisy-lib']), 'mermaid')`.
+ *
+ * Returns the input reference unchanged when `excluded` is empty.
+ */
+export function excludeLibs(graph: Edges<string>, excluded: readonly string[]): Edges<string> {
+  if (excluded.length === 0) return graph;
+  const blocklist = new Set(excluded);
+  const result: Edges<string> = {};
+  for (const [lib, deps] of Object.entries(graph)) {
+    if (blocklist.has(lib)) continue;
+    result[lib] = deps.filter((dep) => !blocklist.has(dep));
+  }
+  return result;
+}
+
 export type OutputFormat = 'mermaid' | 'edges' | 'json' | 'dot' | 'stats';
 
 export const OUTPUT_FORMATS: readonly OutputFormat[] = ['mermaid', 'edges', 'json', 'dot', 'stats'];
