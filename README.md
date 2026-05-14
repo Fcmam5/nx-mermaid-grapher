@@ -143,6 +143,7 @@ the bundled DDD example fixture:
 | `-o mermaid` (default)| ~770 B    |
 | `-o json`             | ~935 B    |
 | `-o edges`            | ~640 B    |
+| `-o stats`            | ~730 B    |
 
 The exact ratio depends on the workspace, but the trend is the same: the raw
 graph carries per-project metadata (`files`, `targets`, `tags`, …) that this
@@ -154,6 +155,7 @@ tool strips down to just the topology.
 | `edges`   | One `source target` pair per line. Minimal whitespace, easy to `awk`/`grep`/feed to an LLM.     |
 | `json`    | Compact `{ "nodes": [...], "edges": [[src, dst], ...] }`. Includes isolated nodes.              |
 | `dot`     | Graphviz `digraph` declaration; pipe into `dot -Tsvg` to render an image.                       |
+| `stats`   | Plain-text summary: counts, roots/leaves, cycle flag, max depth + example longest path, per-project fan-in/fan-out. Single token-cheap snapshot of workspace shape. |
 
 Examples:
 
@@ -169,16 +171,23 @@ npx nx-mermaid-grapher -f graph.json -o json
 
 # Graphviz, rendered to SVG.
 npx nx-mermaid-grapher -f graph.json -o dot | dot -Tsvg > graph.svg
+
+# One-shot summary (counts, roots/leaves, cycle check, hottest projects).
+npx nx-mermaid-grapher -f graph.json -o stats
 ```
 
 > [!TIP]
 > **For AI agents and tool authors.** Pick the format that matches what the
 > model actually needs:
 >
-> - **Reasoning about structure** ("which libs depend on `auth`?", "is there a
->   cycle?") → use `--format edges` or `--format json`. Both are much smaller
->   than the raw Nx graph and have predictable shapes the model can parse
->   without hallucinating fields.
+> - **One-shot orientation** ("how big is this workspace?", "any cycles?",
+>   "what are the load-bearing libs?") → use `--format stats`. A single block
+>   of text covers counts, roots/leaves, cycle detection, max depth, and
+>   per-project fan-in/fan-out.
+> - **Reasoning about structure** ("which libs depend on `auth`?", "show me
+>   the path from `library` to `shared-domain`") → use `--format edges` or
+>   `--format json`. Both are much smaller than the raw Nx graph and have
+>   predictable shapes the model can parse without hallucinating fields.
 > - **Showing the user the topology** in a chat reply, a PR comment, or a
 >   markdown report → use the default `mermaid` output. It renders natively on
 >   GitHub/GitLab and in VS Code-based editors (Cursor, Windsurf, VSCodium, …)

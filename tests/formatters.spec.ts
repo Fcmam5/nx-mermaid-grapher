@@ -1,10 +1,5 @@
 import { Edges } from '../lib/data-structures/graph.ds.interface';
-import {
-  OUTPUT_FORMATS,
-  OutputFormat,
-  formatGraph,
-  isOutputFormat,
-} from '../lib/formatters';
+import { OUTPUT_FORMATS, OutputFormat, formatGraph, isOutputFormat } from '../lib/formatters';
 
 const SAMPLE: Edges<string> = {
   a: ['b', 'c'],
@@ -26,9 +21,7 @@ describe('isOutputFormat', () => {
 describe('formatGraph', () => {
   describe('mermaid', () => {
     it('emits a graph LR block with one indented edge per line', () => {
-      expect(formatGraph(SAMPLE, 'mermaid')).toBe(
-        'graph LR\n  a --> b\n  a --> c\n  b --> c\n',
-      );
+      expect(formatGraph(SAMPLE, 'mermaid')).toBe('graph LR\n  a --> b\n  a --> c\n  b --> c\n');
     });
 
     it('omits isolated nodes (no outgoing edges)', () => {
@@ -73,6 +66,38 @@ describe('formatGraph', () => {
       expect(out).toContain('  "c";'); // isolated node still declared
       expect(out).toContain('  "a" -> "b";');
       expect(out).toContain('  "b" -> "c";');
+    });
+  });
+
+  describe('stats', () => {
+    it('emits a readable summary block with the expected sections', () => {
+      const out = formatGraph(SAMPLE, 'stats');
+
+      expect(out.startsWith('graph stats\n')).toBe(true);
+      expect(out).toMatch(/nodes:\s+3/);
+      expect(out).toMatch(/edges:\s+3/);
+      expect(out).toMatch(/roots:\s+1/);
+      expect(out).toMatch(/leaves:\s+1/);
+      expect(out).toMatch(/cycles:\s+none/);
+      expect(out).toMatch(/max depth:\s+2/);
+      expect(out).toContain('a -> b -> c');
+      expect(out).toContain('per-project (fan-in / fan-out):');
+      // Node `c` is the most depended-on, so it lists first.
+      const perProject = out.split('per-project (fan-in / fan-out):\n')[1];
+      expect(perProject.trimStart().startsWith('c ')).toBe(true);
+    });
+
+    it('omits the per-project section for an empty graph', () => {
+      const out = formatGraph({}, 'stats');
+      expect(out).toMatch(/nodes:\s+0/);
+      expect(out).toMatch(/edges:\s+0/);
+      expect(out).not.toContain('per-project');
+    });
+
+    it('flags cycles and omits max depth', () => {
+      const out = formatGraph({ a: ['b'], b: ['a'] }, 'stats');
+      expect(out).toMatch(/cycles:\s+yes/);
+      expect(out).not.toContain('max depth:');
     });
   });
 

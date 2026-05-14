@@ -13,7 +13,8 @@ export const USAGE = `Usage: nx-mermaid-grapher -f <path> [-o <format>] [-e <lib
 Options:
   -f, --file <path>      NX graph output file
                          (see: https://nx.dev/packages/nx/documents/dep-graph#file)
-  -o, --format <format>  Output format: ${OUTPUT_FORMATS.join(' | ')} (default: mermaid)
+  -o, --format <format>  Output format (default: mermaid).
+                         One of: ${OUTPUT_FORMATS.join(', ')}
   -e, --exclude <lib>    Exclude a library (repeatable)
       --raw              Emit raw Mermaid (no \`\`\`mermaid markdown fence)
   -h, --help             Show help

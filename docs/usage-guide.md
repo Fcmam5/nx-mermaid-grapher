@@ -12,11 +12,12 @@ wiring it into a script, an AI agent prompt, or a CI workflow.
 ## Table of contents
 
 - [Getting an Nx graph dump](#getting-an-nx-graph-dump)
-- [The four output formats](#the-four-output-formats)
+- [The output formats](#the-output-formats)
   - [`mermaid` (default)](#mermaid-default)
   - [`edges`](#edges)
   - [`json`](#json)
   - [`dot`](#dot)
+  - [`stats`](#stats)
 - [Filtering with `--exclude`](#filtering-with---exclude)
 - [Using the library programmatically](#using-the-library-programmatically)
 - [Pointers](#pointers)
@@ -36,7 +37,7 @@ npx nx graph --affected --file=affected.json --base=origin/develop
 `nx-mermaid-grapher` then reads that file and emits whichever format you ask
 for on stdout.
 
-## The four output formats
+## The output formats
 
 Pick one with `-o <format>` (or `--format <format>`). The default is `mermaid`.
 
@@ -269,6 +270,53 @@ npx nx-mermaid-grapher -f graph.json -o dot | dot -Tsvg > graph.svg
 npx nx-mermaid-grapher -f graph.json -o dot | dot -Tpng > graph.png
 ```
 
+### `stats`
+
+**When to use it.** When you want a single token-cheap snapshot of workspace
+shape — for "is this codebase healthy?" reasoning, for an AI agent's first
+look at the repo, or just to spot the load-bearing libraries at a glance.
+
+The summary covers:
+
+- Total node and edge counts.
+- Roots (projects with no incoming edges) and leaves (no outgoing edges).
+- Cycle detection — flagged with `cycles: yes` if any directed cycle exists.
+- Max dependency depth (longest path in edges) plus one example longest path.
+  Reported as `cycles: yes (max depth omitted)` when cycles are present.
+- Per-project fan-in / fan-out, sorted with the most depended-on projects
+  first.
+
+```bash
+npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json -o stats
+```
+
+```
+graph stats
+  nodes:     8
+  edges:     18
+  roots:     1
+    library
+  leaves:    1
+    shared-domain
+  cycles:    none
+  max depth: 6
+    library -> lending-ui-rest -> lending-infrastructure -> lending-application -> catalogue -> shared-infrastructure-nestjs-cqrs-events -> shared-domain
+
+per-project (fan-in / fan-out):
+  shared-domain                              5 / 0
+  lending-domain                             4 / 1
+  lending-application                        2 / 3
+  lending-infrastructure                     2 / 4
+  catalogue                                  2 / 2
+  shared-infrastructure-nestjs-cqrs-events   2 / 1
+  lending-ui-rest                            1 / 3
+  library                                    0 / 4
+```
+
+The format is plain text by design (cheap for both humans and LLMs to skim).
+If you need it as structured data, call [`computeStats`](#using-the-library-programmatically)
+from the library API instead — it returns a typed `GraphStats` object.
+
 ## Filtering with `--exclude`
 
 Any output format can be narrowed by excluding noisy projects. `-e` (or
@@ -307,6 +355,12 @@ const compactJson = core.getGraphSnippet(['lending-infrastructure'], 'json');
 // Or call `formatGraph` directly if you already have a graph object:
 import { formatGraph } from 'nx-mermaid-grapher';
 const dot = formatGraph({ a: ['b'], b: [] }, 'dot');
+
+// Want stats as a typed object instead of a printed summary?
+import { computeStats, type GraphStats } from 'nx-mermaid-grapher';
+const stats: GraphStats = computeStats({ a: ['b', 'c'], b: ['c'], c: [] });
+//   { nodes: 3, edges: 3, roots: ['a'], leaves: ['c'], hasCycles: false,
+//     maxDepth: 2, longestPath: ['a', 'b', 'c'], projects: [...] }
 ```
 
 You can also bring your own graph data structure by implementing `IGraph<T>`

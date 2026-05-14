@@ -81,6 +81,15 @@ describe('CLI run()', () => {
       expect(out).toMatch(/"\S+" -> "\S+";/);
     });
 
+    it('emits a stats summary with --format stats', () => {
+      const out = run(['-f', FIXTURE, '-o', 'stats']);
+      expect(out.startsWith('graph stats\n')).toBe(true);
+      expect(out).toMatch(/nodes:\s+\d+/);
+      expect(out).toMatch(/edges:\s+\d+/);
+      expect(out).toMatch(/cycles:\s+(none|yes)/);
+      expect(out).toContain('per-project (fan-in / fan-out):');
+    });
+
     it('throws CliError for an unknown format', () => {
       expect(() => run(['-f', FIXTURE, '-o', 'graphviz'])).toThrow(/invalid --format/);
     });
