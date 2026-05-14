@@ -1,7 +1,7 @@
-jest.mock('fs');
+jest.mock('node:fs');
 import mockGraphExample from '../mocks/ddd-example.graph.json';
 import { NXGraphFileLoader } from '../../lib/nx/load-nx-graph';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 
 describe('NXGraphFileLoader', () => {
   let loader: NXGraphFileLoader;
@@ -15,7 +15,20 @@ describe('NXGraphFileLoader', () => {
 
     expect(loader.readNXGraph('path')).toBeTruthy();
 
-    expect(readFileSync).toHaveBeenCalled();
+    expect(readFileSync).toHaveBeenCalledWith('path', 'utf-8');
+  });
+
+  it('reads from stdin (fd 0) when path is "-"', () => {
+    (readFileSync as jest.Mock).mockReturnValue(JSON.stringify(mockGraphExample));
+
+    expect(loader.readNXGraph('-')).toBeTruthy();
+
+    expect(readFileSync).toHaveBeenCalledWith(0, 'utf-8');
+  });
+
+  it('labels stdin errors with "<stdin>" instead of "-"', () => {
+    (readFileSync as jest.Mock).mockReturnValue('{}');
+    expect(() => loader.readNXGraph('-')).toThrow(/^<stdin>:/);
   });
 
   it.each([
