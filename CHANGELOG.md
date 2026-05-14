@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   allowlist filtering logic so programmatic callers can compose it with
   `formatGraph` and `computeStats` (e.g. `formatGraph(selectLibs(graph, affected), 'mermaid')`).
 
+### Deprecated
+
+- `NxMermaidGrapher.getGraphSnippet()` parameter order. The current signature
+  places `selectedLibraries` after `format`, forcing callers to always pass
+  `format` when they only want to filter by selected libraries.
+
 ### Fixed
 
 - Rewrote affected-project recipe. Corrects the false claim that

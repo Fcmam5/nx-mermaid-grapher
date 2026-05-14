@@ -16,6 +16,12 @@ export class NxMermaidGrapher {
     this.toDiGraph();
   }
 
+  /**
+   * @deprecated Parameter order will be stabilized as `(excludedLibs, selectedLibraries, format)`
+   * in the next major version.
+   *
+   * See: https://github.com/Fcmam5/nx-mermaid-grapher/issues/33
+   */
   getGraphSnippet(excludedLibs: string[] = [], format: OutputFormat = 'mermaid', selectedLibraries?: string[]): string {
     let rs = excludeLibs(this.graph.getGraph(), excludedLibs);
     if (selectedLibraries) {
