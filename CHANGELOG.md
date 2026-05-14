@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`-p, --projects <lib>` CLI flag** (repeatable) to render only the specified
+  libraries and edges between them. Ideal for affected-project subgraphs when
+  you already know which projects changed (e.g. from `nx show projects --affected`).
+  Composes with `-e` / `--exclude` — exclusion runs first, then the allowlist.
+- Public export `selectLibs(graph, selected)` from `lib/formatters`. Lifts the
+  allowlist filtering logic so programmatic callers can compose it with
+  `formatGraph` and `computeStats` (e.g. `formatGraph(selectLibs(graph, affected), 'mermaid')`).
+
+### Fixed
+
+- Rewrote affected-project recipe. Corrects the false claim that
+  `nx graph --affected --file=...` outputs an affected-only JSON. The proper
+  workflow is: `nx graph --file=...` + `nx show projects --affected --json`
+  piped through `jq` to build `-p` flags.
+- Updated GitHub Actions workflow example to use the same correct approach.
+
 ## [2.0.0] - 2026-05-14
 
 ### Added

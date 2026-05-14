@@ -1,5 +1,5 @@
 import { IGraph } from './data-structures/graph.ds.interface';
-import { excludeLibs, formatGraph, OutputFormat } from './formatters';
+import { excludeLibs, formatGraph, OutputFormat, selectLibs } from './formatters';
 import { GraphJsonResponse } from './nx/interfaces/graph-json.nx.interface';
 import { NXGraphFileLoader } from './nx/load-nx-graph';
 
@@ -16,8 +16,11 @@ export class NxMermaidGrapher {
     this.toDiGraph();
   }
 
-  getGraphSnippet(excludedLibs: string[] = [], format: OutputFormat = 'mermaid'): string {
-    const rs = excludeLibs(this.graph.getGraph(), excludedLibs);
+  getGraphSnippet(excludedLibs: string[] = [], format: OutputFormat = 'mermaid', selectedLibraries?: string[]): string {
+    let rs = excludeLibs(this.graph.getGraph(), excludedLibs);
+    if (selectedLibraries) {
+      rs = selectLibs(rs, selectedLibraries);
+    }
     return formatGraph(rs, format);
   }
 

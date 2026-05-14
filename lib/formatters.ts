@@ -19,6 +19,24 @@ export function excludeLibs(graph: Edges<string>, excluded: readonly string[]): 
   return result;
 }
 
+/**
+ * Return a copy of `graph` containing only the given libraries and edges
+ * where both endpoints are in the allowlist. Useful for focusing on a subset
+ * of projects — e.g. affected projects from `nx show projects --affected`.
+ *
+ * Returns the input reference unchanged when `libraries` is empty.
+ */
+export function selectLibs(graph: Edges<string>, libraries: readonly string[]): Edges<string> {
+  if (libraries.length === 0) return graph;
+  const allowlist = new Set(libraries);
+  const result: Edges<string> = {};
+  for (const [lib, deps] of Object.entries(graph)) {
+    if (!allowlist.has(lib)) continue;
+    result[lib] = deps.filter((dep) => allowlist.has(dep));
+  }
+  return result;
+}
+
 export type OutputFormat = 'mermaid' | 'edges' | 'json' | 'dot' | 'stats';
 
 export const OUTPUT_FORMATS: readonly OutputFormat[] = ['mermaid', 'edges', 'json', 'dot', 'stats'];

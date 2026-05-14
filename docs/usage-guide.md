@@ -11,16 +11,18 @@ wiring it into a script, an AI agent prompt, or a CI workflow.
 
 ## Table of contents
 
-- [Getting an Nx graph dump](#getting-an-nx-graph-dump)
-- [The output formats](#the-output-formats)
-  - [`mermaid` (default)](#mermaid-default)
-  - [`edges`](#edges)
-  - [`json`](#json)
-  - [`dot`](#dot)
-  - [`stats`](#stats)
-- [Filtering with `--exclude`](#filtering-with---exclude)
-- [Using the library programmatically](#using-the-library-programmatically)
-- [Pointers](#pointers)
+- [Usage guide](#usage-guide)
+  - [Table of contents](#table-of-contents)
+  - [Getting an Nx graph dump](#getting-an-nx-graph-dump)
+  - [The output formats](#the-output-formats)
+    - [`mermaid` (default)](#mermaid-default)
+    - [`edges`](#edges)
+    - [`json`](#json)
+    - [`dot`](#dot)
+    - [`stats`](#stats)
+  - [Filtering with `--exclude` and `--projects`](#filtering-with---exclude-and---projects)
+  - [Using the library programmatically](#using-the-library-programmatically)
+  - [Pointers](#pointers)
 
 ## Getting an Nx graph dump
 
@@ -29,9 +31,6 @@ Every command in this guide starts with a JSON file produced by Nx:
 ```bash
 # Whole workspace:
 npx nx graph --file=graph.json
-
-# Only the projects affected by your branch (against develop):
-npx nx graph --affected --file=affected.json --base=origin/develop
 ```
 
 `nx-mermaid-grapher` then reads that file and emits whichever format you ask
@@ -329,7 +328,7 @@ The format is plain text by design (cheap for both humans and LLMs to skim).
 If you need it as structured data, call [`computeStats`](#using-the-library-programmatically)
 from the library API instead — it returns a typed `GraphStats` object.
 
-## Filtering with `--exclude`
+## Filtering with `--exclude` and `--projects`
 
 Any output format can be narrowed by excluding noisy projects. `-e` (or
 `--exclude`) is repeatable and removes the named project both as a source and
@@ -342,6 +341,18 @@ npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json \
 
 This is especially useful for AI agent prompts: drop the projects the model
 doesn't care about before paying tokens for them.
+
+To keep only a specific set of libraries, use `-p` (or `--projects`). This is
+ideal for rendering affected-project subgraphs when you already know which
+projects changed:
+
+```bash
+npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json \
+  -p lending-infrastructure -p lending-application -p lending-domain
+```
+
+The two flags compose: `--exclude` runs first, then `--projects` filters the
+remaining graph. You can combine them for precise control.
 
 ## Using the library programmatically
 
@@ -375,10 +386,14 @@ const stats: GraphStats = computeStats({ a: ['b', 'c'], b: ['c'], c: [] });
 //     maxDepth: 2, longestPath: ['a', 'b', 'c'], projects: [...] }
 
 // Need stats or a rendered graph with some libs filtered out? Compose
-// `excludeLibs` with either:
-import { excludeLibs } from 'nx-mermaid-grapher';
+// `excludeLibs` or `selectLibs` with either:
+import { excludeLibs, selectLibs } from 'nx-mermaid-grapher';
 const trimmedStats = computeStats(excludeLibs(graph, ['noisy-lib']));
 const trimmedDot = formatGraph(excludeLibs(graph, ['noisy-lib']), 'dot');
+
+// Or render only the projects affected by your PR:
+const affected = selectLibs(graph, ['lending-infrastructure', 'lending-application']);
+const affectedMermaid = formatGraph(affected, 'mermaid');
 ```
 
 You can also bring your own graph data structure by implementing `IGraph<T>`
