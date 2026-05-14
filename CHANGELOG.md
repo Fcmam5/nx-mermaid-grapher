@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-05-14
+
 ### Added
 
 - `SECURITY.md` and `PRIVACY.md`.
@@ -100,7 +102,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [#1]: https://github.com/Fcmam5/nx-mermaid-grapher/issues/1
 
-[Unreleased]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.1.0...2.0.0
 [1.1.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Fcmam5/nx-mermaid-grapher/releases/tag/1.0.0
