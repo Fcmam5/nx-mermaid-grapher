@@ -1,4 +1,5 @@
 import { Edges, IGraph } from './data-structures/graph.ds.interface';
+import { formatGraph, OutputFormat } from './formatters';
 import { GraphJsonResponse } from './nx/interfaces/graph-json.nx.interface';
 import { NXGraphFileLoader } from './nx/load-nx-graph';
 
@@ -15,14 +16,9 @@ export class NxMermaidGrapher {
     this.toDiGraph();
   }
 
-  getGraphSnippet(excludedLibs: string[] = []) {
+  getGraphSnippet(excludedLibs: string[] = [], format: OutputFormat = 'mermaid'): string {
     const rs = this.filterOutLibs(this.graph.getGraph(), excludedLibs);
-
-    const lines = Object.keys(rs)
-      .filter((lib) => rs[lib].length)
-      .flatMap((lib) => rs[lib].map((dep) => `  ${lib} --> ${dep}\n`));
-
-    return `graph LR\n${lines.join('')}`;
+    return formatGraph(rs, format);
   }
 
   private toDiGraph(): void {

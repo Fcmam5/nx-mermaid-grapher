@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `build:dev` script (source maps for local debugging).
 - New CLI exports `run(argv)` and `CliError` from `lib/cli` for programmatic use
   and testing.
+- **Multiple output formats** via `-o, --format <mermaid|edges|json|dot>`
+  (default `mermaid`). The new formats are aimed at scripts and AI agents that
+  need cheap, structured access to the workspace topology without re-parsing
+  the much larger raw Nx graph JSON:
+  - `edges` — minimal `source target` lines.
+  - `json` — compact `{ "nodes": [...], "edges": [[src, dst], ...] }`.
+  - `dot` — Graphviz `digraph` declaration, pipe into `dot -Tsvg`.
+- New `--raw` flag to emit Mermaid without the surrounding
+  `` ```mermaid `` markdown fence.
+- Public exports `formatGraph`, `isOutputFormat`, `OUTPUT_FORMATS`, and the
+  `OutputFormat` type from `lib/formatters` for programmatic use.
 - `NXGraphFileLoader.readNXGraph` now validates the parsed JSON and throws a
   descriptive error if the file is not a recognisable Nx graph dump (missing
   `graph`, `graph.nodes`, or `graph.dependencies`).
@@ -26,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored `lib/cli.ts` to expose a pure `run(argv): string` entry point and a
   `CliError` class; the script is now executed only when invoked directly
   (`require.main === module`). Test coverage on `cli.ts` went from 0% to 100%.
+- `NxMermaidGrapher.getGraphSnippet` now takes an optional second argument
+  `format: OutputFormat = 'mermaid'`. Existing callers are unaffected.
 - Internal cleanup of `core.ts` and `di-graph.ds.ts`: linear-time
   `getGraphSnippet` (was quadratic in shape due to array spreading), `Set`-based
   exclusion lookup in `filterOutLibs`, and a properly typed `Map<string, string[]>`

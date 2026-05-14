@@ -4,12 +4,25 @@
 
 A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX dependency graphs](https://nx.dev/packages/nx/documents/dep-graph).
 
+> [!TIP]
+> **Using this from an AI coding agent?** `nx-mermaid-grapher` is designed to be
+> a token-cheap window into an Nx workspace. Instead of feeding the model the
+> full `nx graph` JSON (often tens to hundreds of kB), have the agent shell out
+> to this CLI with `--format edges` or `--format json` to get a compact view of
+> the dependency topology. The default `mermaid` output is great for **showing
+> the result back to the user** — it renders natively in GitHub/GitLab markdown
+> and in VS Code-based editors (Cursor, Windsurf, VSCodium, ...) with a Mermaid
+> preview extension. See [Output formats](#output-formats) below for the short
+> version, or the [Usage guide](./docs/usage-guide.md) for a full walkthrough
+> of every format with realistic examples.
+
 <!-- omit in toc -->
 ## Table of Contents
 - [nx-mermaid-grapher](#nx-mermaid-grapher)
   - [Example](#example)
   - [Usage](#usage)
     - [CLI](#cli)
+      - [Output formats](#output-formats)
     - [Code](#code)
   - [Recipes](#recipes)
     - [Render only the libs affected by a PR](#render-only-the-libs-affected-by-a-pr)
@@ -93,14 +106,16 @@ npx nx-mermaid-grapher -f file.json
 Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
-Usage: nx-mermaid-grapher -f <path> [-e <lib>]...
+Usage: nx-mermaid-grapher -f <path> [-o <format>] [-e <lib>]... [--raw]
 
 Options:
-  -f, --file <path>     NX graph output file
-                        (see: https://nx.dev/packages/nx/documents/dep-graph#file)
-  -e, --exclude <lib>   Exclude a library (repeatable)
-  -h, --help            Show help
-  -V, --version         Show version
+  -f, --file <path>      NX graph output file
+                         (see: https://nx.dev/packages/nx/documents/dep-graph#file)
+  -o, --format <format>  Output format: mermaid | edges | json | dot (default: mermaid)
+  -e, --exclude <lib>    Exclude a library (repeatable)
+      --raw              Emit raw Mermaid (no ```mermaid markdown fence)
+  -h, --help             Show help
+  -V, --version          Show version
 ```
 
 **Example**:
@@ -114,6 +129,69 @@ Optionally you can exclude one, or multiple libraries. For example:
 ```bash
 npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json -e lending-infrastructure -e lending-ui-rest
 ```
+
+#### Output formats
+
+Pass `-o <format>` (or `--format`) to switch the output. The default is
+`mermaid`; the others exist so scripts and AI agents can consume the topology
+cheaply without re-parsing the much larger raw Nx graph JSON. Concretely, on
+the bundled DDD example fixture:
+
+| Output                | Size      |
+| --------------------- | --------- |
+| raw `nx graph` JSON   | ~49,500 B |
+| `-o mermaid` (default)| ~770 B    |
+| `-o json`             | ~935 B    |
+| `-o edges`            | ~640 B    |
+
+The exact ratio depends on the workspace, but the trend is the same: the raw
+graph carries per-project metadata (`files`, `targets`, `tags`, …) that this
+tool strips down to just the topology.
+
+| Format    | Use case                                                                                        |
+| --------- | ----------------------------------------------------------------------------------------------- |
+| `mermaid` | Paste into a Markdown doc, PR description, GitHub/GitLab README, or a chat reply. Renders natively on GitHub/GitLab and in VS Code-based editors (Cursor, Windsurf, VSCodium, …) with a Mermaid preview extension. Wrapped in a `\`\`\`mermaid` fence by default. |
+| `edges`   | One `source target` pair per line. Minimal whitespace, easy to `awk`/`grep`/feed to an LLM.     |
+| `json`    | Compact `{ "nodes": [...], "edges": [[src, dst], ...] }`. Includes isolated nodes.              |
+| `dot`     | Graphviz `digraph` declaration; pipe into `dot -Tsvg` to render an image.                       |
+
+Examples:
+
+```bash
+# Raw Mermaid body (no markdown fence) — handy when piping into a templater.
+npx nx-mermaid-grapher -f graph.json --raw
+
+# Plain edge list — the cheapest format for an AI agent to reason about.
+npx nx-mermaid-grapher -f graph.json -o edges
+
+# Compact JSON.
+npx nx-mermaid-grapher -f graph.json -o json
+
+# Graphviz, rendered to SVG.
+npx nx-mermaid-grapher -f graph.json -o dot | dot -Tsvg > graph.svg
+```
+
+> [!TIP]
+> **For AI agents and tool authors.** Pick the format that matches what the
+> model actually needs:
+>
+> - **Reasoning about structure** ("which libs depend on `auth`?", "is there a
+>   cycle?") → use `--format edges` or `--format json`. Both are much smaller
+>   than the raw Nx graph and have predictable shapes the model can parse
+>   without hallucinating fields.
+> - **Showing the user the topology** in a chat reply, a PR comment, or a
+>   markdown report → use the default `mermaid` output. It renders natively on
+>   GitHub/GitLab and in VS Code-based editors (Cursor, Windsurf, VSCodium, …)
+>   with a Mermaid preview extension.
+> - **Producing an image** for a doc site or a Slack message → use
+>   `--format dot | dot -Tsvg` (or `-Tpng`).
+>
+> Combine with `-e <lib>` to drop noisy projects from the rendered subset
+> before passing it to the model — fewer tokens, less distraction.
+
+For a full walkthrough of every format with realistic outputs, recipes for
+querying the edge list with `awk`, and a programmatic-API example, see the
+[Usage guide](./docs/usage-guide.md).
 
 ### Code
 
@@ -232,6 +310,7 @@ sticky comment in place, swap the last step for an action like
 
 ## Project documents
 
+- [Usage guide](./docs/usage-guide.md) — every output format with realistic examples and recipes.
 - [Changelog](./CHANGELOG.md) — release history and notable changes.
 - [Contributing](./CONTRIBUTING.md) — how to set up the project and propose changes.
 - [Code of Conduct](./CODE_OF_CONDUCT.md) — community expectations.

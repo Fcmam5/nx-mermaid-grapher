@@ -4,17 +4,20 @@ import { parseArgs } from 'node:util';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DiGraph } from './data-structures/di-graph.ds';
+import { isOutputFormat, OUTPUT_FORMATS } from './formatters';
 import { NXGraphFileLoader } from './nx/load-nx-graph';
 import { NxMermaidGrapher } from './core';
 
-export const USAGE = `Usage: nx-mermaid-grapher -f <path> [-e <lib>]...
+export const USAGE = `Usage: nx-mermaid-grapher -f <path> [-o <format>] [-e <lib>]... [--raw]
 
 Options:
-  -f, --file <path>     NX graph output file
-                        (see: https://nx.dev/packages/nx/documents/dep-graph#file)
-  -e, --exclude <lib>   Exclude a library (repeatable)
-  -h, --help            Show help
-  -V, --version         Show version`;
+  -f, --file <path>      NX graph output file
+                         (see: https://nx.dev/packages/nx/documents/dep-graph#file)
+  -o, --format <format>  Output format: ${OUTPUT_FORMATS.join(' | ')} (default: mermaid)
+  -e, --exclude <lib>    Exclude a library (repeatable)
+      --raw              Emit raw Mermaid (no \`\`\`mermaid markdown fence)
+  -h, --help             Show help
+  -V, --version          Show version`;
 
 /**
  * Thrown for expected, user-facing CLI errors (bad/missing args).
@@ -45,7 +48,9 @@ export function run(argv: string[]): string {
       args: argv,
       options: {
         file: { type: 'string', short: 'f' },
+        format: { type: 'string', short: 'o' },
         exclude: { type: 'string', short: 'e', multiple: true },
+        raw: { type: 'boolean' },
         help: { type: 'boolean', short: 'h' },
         version: { type: 'boolean', short: 'V' },
       },
@@ -65,10 +70,22 @@ export function run(argv: string[]): string {
     throw new CliError('missing required option: -f, --file');
   }
 
+  const format = values.format ?? 'mermaid';
+  if (!isOutputFormat(format)) {
+    throw new CliError(`invalid --format '${format}'. Choose one of: ${OUTPUT_FORMATS.join(', ')}`);
+  }
+
   const core = new NxMermaidGrapher(new NXGraphFileLoader(), new DiGraph());
   core.init(values.file);
 
-  return `\`\`\`mermaid\n${core.getGraphSnippet(values.exclude)}\`\`\``;
+  const body = core.getGraphSnippet(values.exclude, format);
+
+  // Wrap Mermaid output in a markdown code fence by default so users can paste
+  // it straight into a PR description or README. Use --raw to opt out.
+  if (format === 'mermaid' && !values.raw) {
+    return `\`\`\`mermaid\n${body}\`\`\``;
+  }
+  return body;
 }
 
 /* istanbul ignore next -- entry point, exercised via the integration smoke test */
