@@ -217,8 +217,8 @@ describe('impactLibs', () => {
   it('handles seeds where only the head is a root', () => {
     const graph: Edges<string> = { a: ['b'], b: ['c'], c: [] };
     const out = impactLibs(graph, ['b', 'c']);
-    // c depends on b (another seed), so only b is a root.
-    // Forward BFS from b finds c; backward BFS from [b,c] finds a.
+    // b depends on c (another seed), so only c is a root.
+    // Forward BFS from c finds nothing; backward BFS from [b,c] finds a.
     expect(out).toEqual({ a: ['b'], b: ['c'], c: [] });
   });
 
