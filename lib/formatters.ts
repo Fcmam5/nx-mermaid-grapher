@@ -110,7 +110,7 @@ export function isOutputFormat(value: string): value is OutputFormat {
  * Render a dependency graph in the requested format.
  *
  * - `mermaid` — `graph LR` body with one edge per indented line. Isolated nodes
- *   are omitted (they cannot be expressed as an edge).
+ *   are rendered as bare declarations (`  nodeName\n`).
  * - `edges` — minimal whitespace-separated edge list, one `source target` pair
  *   per line. Designed for cheap token consumption by AI agents.
  * - `json` — `{ "nodes": [...], "edges": [["src", "dst"], ...] }`. Includes
@@ -140,7 +140,16 @@ function withOutgoing(edges: Edges<string>): string[] {
 }
 
 function formatMermaid(edges: Edges<string>): string {
-  const lines = withOutgoing(edges).flatMap((lib) => edges[lib].map((dep) => `  ${lib} --> ${dep}\n`));
+  const lines: string[] = [];
+  for (const [lib, deps] of Object.entries(edges)) {
+    if (deps.length === 0) {
+      lines.push(`  ${lib}\n`);
+    } else {
+      for (const dep of deps) {
+        lines.push(`  ${lib} --> ${dep}\n`);
+      }
+    }
+  }
   return `graph LR\n${lines.join('')}`;
 }
 

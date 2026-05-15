@@ -29,11 +29,11 @@ describe('isOutputFormat', () => {
 describe('formatGraph', () => {
   describe('mermaid', () => {
     it('emits a graph LR block with one indented edge per line', () => {
-      expect(formatGraph(SAMPLE, 'mermaid')).toBe('graph LR\n  a --> b\n  a --> c\n  b --> c\n');
+      expect(formatGraph(SAMPLE, 'mermaid')).toBe('graph LR\n  a --> b\n  a --> c\n  b --> c\n  c\n');
     });
 
-    it('omits isolated nodes (no outgoing edges)', () => {
-      expect(formatGraph({ orphan: [] }, 'mermaid')).toBe('graph LR\n');
+    it('renders isolated nodes as bare declarations', () => {
+      expect(formatGraph({ orphan: [] }, 'mermaid')).toBe('graph LR\n  orphan\n');
     });
   });
 

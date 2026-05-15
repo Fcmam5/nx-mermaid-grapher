@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   plus the full transitive closure in both directions with all edges between
   included nodes.
 
+### Fixed
+
+- **`formatMermaid` no longer drops isolated nodes.** Nodes with no outgoing
+  edges after filtering are now rendered as bare declarations (`  nodeName\n`)
+  instead of being silently omitted. Fixes [#34](https://github.com/Fcmam5/nx-mermaid-grapher/issues/34).
+
 ## [2.1.0] - 2026-05-15
 
 ### Added

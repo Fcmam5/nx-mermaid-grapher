@@ -147,6 +147,7 @@ const expectedGraph = `graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   catalogue --> shared-domain
   catalogue --> shared-infrastructure-nestjs-cqrs-events
   library --> catalogue
@@ -166,6 +167,7 @@ const expectedGraphWithExcludedLibs = `graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   library --> lending-ui-rest
   library --> lending-domain
   library --> lending-infrastructure
@@ -184,6 +186,7 @@ const expectedGraphWithoutHeadLib = `graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   catalogue --> shared-domain
   catalogue --> shared-infrastructure-nestjs-cqrs-events
 `;
