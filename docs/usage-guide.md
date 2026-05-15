@@ -354,6 +354,15 @@ npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json \
 The two flags compose: `--exclude` runs first, then `--projects` filters the
 remaining graph. You can combine them for precise control.
 
+For the full transitive closure (all downstream dependencies and all upstream
+dependents), add `--impact`. This is useful when you need the complete ripple
+effect of a change:
+
+```bash
+npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json \
+  -p lending-infrastructure --impact
+```
+
 ## Using the library programmatically
 
 Everything the CLI does is also exposed as a TypeScript API:
@@ -394,6 +403,11 @@ const trimmedDot = formatGraph(excludeLibs(graph, ['noisy-lib']), 'dot');
 // Or render only the projects affected by your PR:
 const affected = selectLibs(graph, ['lending-infrastructure', 'lending-application']);
 const affectedMermaid = formatGraph(affected, 'mermaid');
+
+// Show impact context — affected projects plus full transitive closure:
+import { impactLibs } from 'nx-mermaid-grapher';
+const withImpact = impactLibs(graph, ['lending-infrastructure', 'lending-application']);
+const impactMermaid = formatGraph(withImpact, 'mermaid');
 ```
 
 You can also bring your own graph data structure by implementing `IGraph<T>`

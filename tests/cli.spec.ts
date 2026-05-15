@@ -57,6 +57,14 @@ describe('CLI run()', () => {
     expect(out).not.toContain('library');
   });
 
+  it('honours --impact by including full transitive closure', () => {
+    const out = run(['-f', FIXTURE, '-p', 'lending-domain', '--impact']);
+
+    // Should include the full chain up to roots and down to leaves.
+    expect(out).toContain('lending-application --> lending-domain');
+    expect(out).toContain('lending-infrastructure --> lending-application');
+  });
+
   it('returns USAGE for --help', () => {
     expect(run(['--help'])).toBe(USAGE);
     expect(run(['-h'])).toBe(USAGE);

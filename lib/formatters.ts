@@ -37,6 +37,67 @@ export function selectLibs(graph: Edges<string>, libraries: readonly string[]): 
   return result;
 }
 
+/**
+ * Return a copy of `graph` containing the given seed libraries and every
+ * node reachable from them in either direction (full transitive closure).
+ *
+ * This includes:
+ *   – all downstream dependencies of the seeds (seeds → dep → dep's deps …)
+ *   – all upstream dependents of the seeds (nodes that transitively depend on
+ *     any seed)
+ *
+ * Returns the input reference unchanged when `seeds` is empty.
+ */
+export function impactLibs(graph: Edges<string>, seeds: readonly string[]): Edges<string> {
+  if (seeds.length === 0) return graph;
+  const included = new Set<string>(seeds);
+
+  // BFS forward: everything reachable FROM seeds (downstream dependencies).
+  let frontier = new Set<string>(seeds);
+  while (frontier.size > 0) {
+    const next = new Set<string>();
+    for (const node of frontier) {
+      for (const dep of graph[node] ?? []) {
+        if (!included.has(dep)) {
+          included.add(dep);
+          next.add(dep);
+        }
+      }
+    }
+    frontier = next;
+  }
+
+  // Build reverse graph once for backward BFS.
+  const reverse: Edges<string> = {};
+  for (const [lib, deps] of Object.entries(graph)) {
+    for (const dep of deps) {
+      (reverse[dep] ??= []).push(lib);
+    }
+  }
+
+  // BFS backward: everything that can reach TO seeds (upstream dependents).
+  frontier = new Set<string>(seeds);
+  while (frontier.size > 0) {
+    const next = new Set<string>();
+    for (const node of frontier) {
+      for (const dependent of reverse[node] ?? []) {
+        if (!included.has(dependent)) {
+          included.add(dependent);
+          next.add(dependent);
+        }
+      }
+    }
+    frontier = next;
+  }
+
+  const result: Edges<string> = {};
+  for (const [lib, deps] of Object.entries(graph)) {
+    if (!included.has(lib)) continue;
+    result[lib] = deps.filter((dep) => included.has(dep));
+  }
+  return result;
+}
+
 export type OutputFormat = 'mermaid' | 'edges' | 'json' | 'dot' | 'stats';
 
 export const OUTPUT_FORMATS: readonly OutputFormat[] = ['mermaid', 'edges', 'json', 'dot', 'stats'];
