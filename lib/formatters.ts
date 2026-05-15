@@ -39,11 +39,13 @@ export function selectLibs(graph: Edges<string>, libraries: readonly string[]): 
 
 /**
  * Return a copy of `graph` containing the given seed libraries and every
- * node reachable from them in either direction (full transitive closure).
+ * node reachable from them in either direction.
  *
  * This includes:
- *   – all downstream dependencies of the seeds (seeds → dep → dep's deps …)
- *   – all upstream dependents of the seeds (nodes that transitively depend on
+ *   – all downstream dependencies of the ROOT seeds (seeds that do not depend
+ *     on any other seed). This prevents unrelated sibling dependencies of
+ *     downstream dependents from being pulled in.
+ *   – all upstream dependents of ANY seed (nodes that transitively depend on
  *     any seed)
  *
  * Returns the input reference unchanged when `seeds` is empty.
@@ -51,9 +53,19 @@ export function selectLibs(graph: Edges<string>, libraries: readonly string[]): 
 export function impactLibs(graph: Edges<string>, seeds: readonly string[]): Edges<string> {
   if (seeds.length === 0) return graph;
   const included = new Set<string>(seeds);
+  const seedSet = new Set<string>(seeds);
 
-  // BFS forward: everything reachable FROM seeds (downstream dependencies).
-  let frontier = new Set<string>(seeds);
+  // Root seeds: seeds that do NOT depend on any other seed.
+  // These are the projects that actually changed (not just pulled in as
+  // dependents of another seed). Forward BFS starts from roots only so
+  // unrelated sibling dependencies of downstream dependents are not pulled in.
+  const roots = seeds.filter((seed) => {
+    const deps = graph[seed] ?? [];
+    return !deps.some((dep) => seedSet.has(dep));
+  });
+
+  // BFS forward: everything reachable FROM root seeds (downstream dependencies).
+  let frontier = new Set<string>(roots);
   while (frontier.size > 0) {
     const next = new Set<string>();
     for (const node of frontier) {
@@ -75,7 +87,7 @@ export function impactLibs(graph: Edges<string>, seeds: readonly string[]): Edge
     }
   }
 
-  // BFS backward: everything that can reach TO seeds (upstream dependents).
+  // BFS backward: everything that can reach TO any seed (upstream dependents).
   frontier = new Set<string>(seeds);
   while (frontier.size > 0) {
     const next = new Set<string>();
@@ -141,7 +153,10 @@ function withOutgoing(edges: Edges<string>): string[] {
 
 function formatMermaid(edges: Edges<string>): string {
   const lines: string[] = [];
+  const seen = new Set<string>();
+
   for (const [lib, deps] of Object.entries(edges)) {
+    seen.add(lib);
     if (deps.length === 0) {
       lines.push(`  ${lib}\n`);
     } else {
@@ -150,6 +165,17 @@ function formatMermaid(edges: Edges<string>): string {
       }
     }
   }
+
+  // Bare declarations for nodes that only appear as targets (not as source keys).
+  for (const deps of Object.values(edges)) {
+    for (const dep of deps) {
+      if (!seen.has(dep)) {
+        seen.add(dep);
+        lines.push(`  ${dep}\n`);
+      }
+    }
+  }
+
   return `graph LR\n${lines.join('')}`;
 }
 

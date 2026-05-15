@@ -2,7 +2,7 @@
 
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FFcmam5%2Fnx-mermaid-grapher%2Fdevelop)](https://dashboard.stryker-mutator.io/reports/github.com/Fcmam5/nx-mermaid-grapher/develop) [![Known Vulnerabilities](https://snyk.io/test/github/Fcmam5/nx-mermaid-grapher/badge.svg)](https://snyk.io/test/github/Fcmam5/nx-mermaid-grapher) [![codecov](https://codecov.io/gh/Fcmam5/nx-mermaid-grapher/branch/develop/graph/badge.svg?token=QSBZLLE1L1)](https://codecov.io/gh/Fcmam5/nx-mermaid-grapher) [![npm](https://img.shields.io/npm/v/nx-mermaid-grapher)](https://www.npmjs.com/package/nx-mermaid-grapher)
 
-A utility to create [`MermaidJS`](https://mermaid.js.org/) graphs for [NX dependency graphs](https://nx.dev/packages/nx/documents/dep-graph).
+A CLI and library to convert [Nx dependency graphs](https://nx.dev/packages/nx/documents/dep-graph) into compact, human-readable formats — Mermaid, Graphviz DOT, JSON, plain-text edges, and workspace stats. Built for PR descriptions, documentation, and AI agent prompts.
 
 > [!TIP]
 > **Using this from an AI coding agent?** `nx-mermaid-grapher` is designed to be
@@ -118,8 +118,8 @@ Options:
   -p, --projects <lib>   Include only these libraries (repeatable).
                          Useful for rendering affected-project subgraphs.
       --impact           When used with --projects, include the full transitive
-                         closure in both directions (seeds + all deps + all
-                         dependents).
+                         closure in both directions. Forward traversal starts
+                         from root seeds only to avoid unrelated siblings.
       --raw              Emit raw Mermaid (no ```mermaid markdown fence)
   -h, --help             Show help
   -V, --version          Show version

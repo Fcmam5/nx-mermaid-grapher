@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2026-05-15
+
+### Changed
+
+- **`impactLibs` forward traversal now starts only from root seeds.** A seed is
+  considered a "root" when it does not depend on any other seed. This prevents
+  unrelated sibling dependencies of downstream dependents from being pulled into
+  the closure. For example, if `web` depends on `ui` and `utils`, selecting both
+  `ui` and `web` will no longer include `utils` in the result — only the true
+  transitive impact of the changed set is rendered.
+
+### Fixed
+
+- **`formatMermaid` now renders bare declarations for nodes that only appear as
+  targets.** Previously, a node that was a dependency but had no outgoing edges of
+  its own could be silently omitted if it was not present as a source key in the
+  edges object.
+
 ## [2.2.0] - 2026-05-15
 
 ### Added
@@ -143,7 +161,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [#1]: https://github.com/Fcmam5/nx-mermaid-grapher/issues/1
 
-[Unreleased]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/2.0.0...HEAD
+[Unreleased]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/2.2.1...HEAD
+[2.2.1]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/2.2.0...2.2.1
+[2.2.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/2.1.0...2.2.0
+[2.1.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.1.0...2.0.0
 [1.1.0]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/Fcmam5/nx-mermaid-grapher/compare/1.0.0...1.0.1
