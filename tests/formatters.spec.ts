@@ -1,5 +1,13 @@
 import { Edges } from '../lib/data-structures/graph.ds.interface';
-import { OUTPUT_FORMATS, OutputFormat, excludeLibs, formatGraph, isOutputFormat, selectLibs } from '../lib/formatters';
+import {
+  OUTPUT_FORMATS,
+  OutputFormat,
+  excludeLibs,
+  formatGraph,
+  impactLibs,
+  isOutputFormat,
+  selectLibs,
+} from '../lib/formatters';
 
 const SAMPLE: Edges<string> = {
   a: ['b', 'c'],
@@ -21,11 +29,11 @@ describe('isOutputFormat', () => {
 describe('formatGraph', () => {
   describe('mermaid', () => {
     it('emits a graph LR block with one indented edge per line', () => {
-      expect(formatGraph(SAMPLE, 'mermaid')).toBe('graph LR\n  a --> b\n  a --> c\n  b --> c\n');
+      expect(formatGraph(SAMPLE, 'mermaid')).toBe('graph LR\n  a --> b\n  a --> c\n  b --> c\n  c\n');
     });
 
-    it('omits isolated nodes (no outgoing edges)', () => {
-      expect(formatGraph({ orphan: [] }, 'mermaid')).toBe('graph LR\n');
+    it('renders isolated nodes as bare declarations', () => {
+      expect(formatGraph({ orphan: [] }, 'mermaid')).toBe('graph LR\n  orphan\n');
     });
   });
 
@@ -162,5 +170,43 @@ describe('selectLibs', () => {
   it('composes with excludeLibs for affected-project filtering', () => {
     const out = formatGraph(selectLibs(excludeLibs(SAMPLE, ['c']), ['a', 'b']), 'edges');
     expect(out).toBe('a b\n');
+  });
+});
+
+describe('impactLibs', () => {
+  it('returns the input reference unchanged when no seeds are given', () => {
+    expect(impactLibs(SAMPLE, [])).toBe(SAMPLE);
+  });
+
+  it('follows downstream dependencies recursively', () => {
+    const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['d'], d: [] };
+    const out = impactLibs(graph, ['a']);
+    expect(out).toEqual({ a: ['b'], b: ['c'], c: ['d'], d: [] });
+  });
+
+  it('follows upstream dependents recursively', () => {
+    const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['d'], d: [] };
+    const out = impactLibs(graph, ['d']);
+    expect(out).toEqual({ a: ['b'], b: ['c'], c: ['d'], d: [] });
+  });
+
+  it('keeps edges only between included nodes', () => {
+    const graph: Edges<string> = { a: ['b', 'x'], b: ['c'], c: [], x: [] };
+    const out = impactLibs(graph, ['a']);
+    // x is a direct dep of a, so it's included; edge a->x is preserved.
+    expect(out).toEqual({ a: ['b', 'x'], b: ['c'], c: [], x: [] });
+  });
+
+  it('drops edges to nodes outside the transitive closure', () => {
+    const graph: Edges<string> = { a: ['b', 'x'], b: ['c'], c: [], x: ['y'], y: [] };
+    const out = impactLibs(graph, ['b']);
+    // a and c are in the closure (upstream/downstream of b); x and y are not.
+    expect(out).toEqual({ a: ['b'], b: ['c'], c: [] });
+  });
+
+  it('handles cycles gracefully', () => {
+    const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['a'] };
+    const out = impactLibs(graph, ['a']);
+    expect(out).toEqual({ a: ['b'], b: ['c'], c: ['a'] });
   });
 });

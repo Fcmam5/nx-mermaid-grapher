@@ -104,6 +104,13 @@ describe('Library core', () => {
       expect(out).not.toContain('library');
       expect(out).not.toContain('catalogue');
     });
+
+    it('should include full transitive closure with impact=true', () => {
+      const out = coreCls.getGraphSnippet([], 'mermaid', ['lending-domain'], true);
+      expect(out).toContain('lending-application --> lending-domain');
+      expect(out).toContain('lending-infrastructure --> lending-application');
+      expect(out).not.toContain('catalogue');
+    });
   });
 
   describe('.getGraphSnippetForLib', () => {
@@ -140,6 +147,7 @@ const expectedGraph = `graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   catalogue --> shared-domain
   catalogue --> shared-infrastructure-nestjs-cqrs-events
   library --> catalogue
@@ -159,6 +167,7 @@ const expectedGraphWithExcludedLibs = `graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   library --> lending-ui-rest
   library --> lending-domain
   library --> lending-infrastructure
@@ -177,6 +186,7 @@ const expectedGraphWithoutHeadLib = `graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   catalogue --> shared-domain
   catalogue --> shared-infrastructure-nestjs-cqrs-events
 `;

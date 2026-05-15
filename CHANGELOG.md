@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-05-15
+
+### Added
+
+- **`--impact` CLI flag** (toggle). When used with `--projects`, includes the
+  full transitive closure in both directions (all downstream dependencies and all
+  upstream dependents).
+- Public export `impactLibs(graph, seeds)` from `lib/formatters`. Returns seeds
+  plus the full transitive closure in both directions with all edges between
+  included nodes.
+
+### Fixed
+
+- **`formatMermaid` no longer drops isolated nodes.** Nodes with no outgoing
+  edges after filtering are now rendered as bare declarations (`  nodeName\n`)
+  instead of being silently omitted. Fixes [#34](https://github.com/Fcmam5/nx-mermaid-grapher/issues/34).
+
 ## [2.1.0] - 2026-05-15
 
 ### Added

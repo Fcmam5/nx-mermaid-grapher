@@ -106,7 +106,7 @@ npx nx-mermaid-grapher -f file.json
 Then, run it with `-f [PATH]` or `--file [PATH]` parameter providing the path for your NX graph JSON output file.
 
 ```
-Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [-p <lib>]... [--raw]
+Usage: nx-mermaid-grapher (-f <path> | --stdin) [-o <format>] [-e <lib>]... [-p <lib>]... [--impact] [--raw]
 
 Options:
   -f, --file <path>      NX graph output file. Pass `-` to read from stdin
@@ -117,6 +117,9 @@ Options:
   -e, --exclude <lib>    Exclude a library (repeatable)
   -p, --projects <lib>   Include only these libraries (repeatable).
                          Useful for rendering affected-project subgraphs.
+      --impact           When used with --projects, include the full transitive
+                         closure in both directions (seeds + all deps + all
+                         dependents).
       --raw              Emit raw Mermaid (no ```mermaid markdown fence)
   -h, --help             Show help
   -V, --version          Show version
@@ -275,16 +278,17 @@ const core = new NxMermaidGrapher(loader, myGraph);
 # 1. Dump the *full* workspace graph (once).
 npx nx graph --file=graph.json
 
-# 2. Get the names of affected projects and render only those.
+# 2. Get the names of affected projects and render with impact context.
+#    --impact includes the full transitive closure around the affected set.
 #    Requires `jq`; adjust --base to your target branch.
-npx nx-mermaid-grapher -f graph.json \
+npx nx-mermaid-grapher -f graph.json --impact \
   $(npx nx show projects --affected --json --base=origin/develop \
     | jq -r '.[] | "-p " + .')
 ```
 
 You can swap `--base=origin/develop` for `origin/main` (or any commit-ish) and
-still combine with `-e <lib>` to hide noisy projects in addition to the
-affected filter.
+still combine with `-e <lib>` to hide noisy projects. Omit `--impact` if you only
+want the strictly affected projects with no surrounding context.
 
 ### Auto-post the affected graph as a PR comment (GitHub Actions)
 
@@ -326,11 +330,11 @@ jobs:
           # 2. Get affected project names and build -p flags.
           PROJECTS=$(npx nx show projects --affected --json --base=origin/${{ github.base_ref }} | jq -r '.[] | "-p " + .' | xargs)
 
-          # 3. Render the subgraph.
+          # 3. Render the subgraph with impact context.
           {
             echo '## Affected dependency graph'
             echo
-            npx nx-mermaid-grapher -f graph.json $PROJECTS
+            npx nx-mermaid-grapher -f graph.json --impact $PROJECTS
           } > graph.md
 
       - name: Comment on the PR
