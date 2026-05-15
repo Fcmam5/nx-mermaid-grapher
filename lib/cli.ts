@@ -20,8 +20,8 @@ Options:
   -p, --projects <lib>   Include only these libraries (repeatable).
                          Useful for rendering affected-project subgraphs.
       --impact           When used with --projects, include the full transitive
-                         closure in both directions (seeds + all deps + all
-                         dependents).
+                         closure in both directions. Forward traversal starts
+                         from root seeds only to avoid unrelated siblings.
       --raw              Emit raw Mermaid (no \`\`\`mermaid markdown fence)
   -h, --help             Show help
   -V, --version          Show version`;

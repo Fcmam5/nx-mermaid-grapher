@@ -35,6 +35,10 @@ describe('formatGraph', () => {
     it('renders isolated nodes as bare declarations', () => {
       expect(formatGraph({ orphan: [] }, 'mermaid')).toBe('graph LR\n  orphan\n');
     });
+
+    it('renders nodes that only appear as targets (not source keys)', () => {
+      expect(formatGraph({ a: ['b'] }, 'mermaid')).toBe('graph LR\n  a --> b\n  b\n');
+    });
   });
 
   describe('edges', () => {
@@ -208,5 +212,32 @@ describe('impactLibs', () => {
     const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['a'] };
     const out = impactLibs(graph, ['a']);
     expect(out).toEqual({ a: ['b'], b: ['c'], c: ['a'] });
+  });
+
+  it('handles seeds where only the head is a root', () => {
+    const graph: Edges<string> = { a: ['b'], b: ['c'], c: [] };
+    const out = impactLibs(graph, ['b', 'c']);
+    // c depends on b (another seed), so only b is a root.
+    // Forward BFS from b finds c; backward BFS from [b,c] finds a.
+    expect(out).toEqual({ a: ['b'], b: ['c'], c: [] });
+  });
+
+  it('does not pull in unrelated sibling deps of a dependent seed', () => {
+    // web depends on ui (root) and utils (unrelated).
+    // When both ui and web are seeds, utils should NOT be included
+    // because forward BFS starts only from the root seed (ui).
+    const graph: Edges<string> = {
+      web: ['ui', 'utils'],
+      ui: ['shared'],
+      shared: [],
+      utils: [],
+    };
+    const out = impactLibs(graph, ['ui', 'web']);
+    expect(out).toEqual({
+      web: ['ui'],
+      ui: ['shared'],
+      shared: [],
+    });
+    expect(out).not.toHaveProperty('utils');
   });
 });

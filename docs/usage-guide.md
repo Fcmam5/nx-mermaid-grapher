@@ -80,6 +80,7 @@ graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   catalogue --> shared-domain
   catalogue --> shared-infrastructure-nestjs-cqrs-events
   library --> catalogue
@@ -105,6 +106,7 @@ graph LR
   lending-ui-rest --> lending-domain
   lending-ui-rest --> lending-infrastructure
   lending-domain --> shared-domain
+  shared-domain
   catalogue --> shared-domain
   catalogue --> shared-infrastructure-nestjs-cqrs-events
   library --> catalogue
@@ -356,7 +358,17 @@ remaining graph. You can combine them for precise control.
 
 For the full transitive closure (all downstream dependencies and all upstream
 dependents), add `--impact`. This is useful when you need the complete ripple
-effect of a change:
+effect of a change.
+
+**How it works.** `--impact` performs a backward BFS from every seed (to find
+all upstream dependents) but only a *forward* BFS from the **root seeds** —
+seeds that do not depend on any other seed. This prevents unrelated sibling
+dependencies of downstream dependents from being pulled in.
+
+For example, imagine `web` depends on both `ui` and `utils`, and your affected
+set is `[ui, web]`. Because `web` depends on `ui` (another seed), `web` is not
+a root seed. Forward traversal starts only from `ui`, so `utils` is **not**
+included — only the true transitive impact of the changed set is rendered.
 
 ```bash
 npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json \

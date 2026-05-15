@@ -1,14 +1,14 @@
 {
   "name": "nx-mermaid-grapher",
-  "version": "2.2.0",
-  "description": "Create MermaidJS graphs from NX dependency graphs",
+  "version": "2.2.1",
+  "description": "Convert Nx dependency graphs into Mermaid, Graphviz, JSON, and other compact formats. Filter by project, compute impact closures, and generate token-cheap topology views for humans and AI agents.",
   "main": "dist/cli.js",
   "files": [
     "dist",
     "!dist/**/*.map"
   ],
   "bin": {
-    "nx-mermaid-grapher": "./dist/cli.js"
+    "nx-mermaid-grapher": "dist/cli.js"
   },
   "types": "dist/index.d.ts",
   "scripts": {
@@ -34,6 +34,17 @@
   "bugs": {
     "url": "https://github.com/Fcmam5/nx-mermaid-grapher/issues"
   },
+  "keywords": [
+    "nx",
+    "nrwl",
+    "monorepo",
+    "dependency-graph",
+    "mermaid",
+    "graphviz",
+    "visualization",
+    "cli",
+    "ai-agents"
+  ],
   "homepage": "https://github.com/Fcmam5/nx-mermaid-grapher#readme",
   "engines": {
     "node": ">=22"
