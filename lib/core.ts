@@ -33,7 +33,7 @@ export class NxMermaidGrapher {
     if (impact !== undefined) {
       console.error('warning: impact parameter is deprecated. Use transitive instead.');
     }
-    const useTransitive = transitive || impact;
+    const useTransitive = transitive !== undefined ? transitive : impact;
 
     let rs = excludeLibs(this.graph.getGraph(), excludedLibs);
     if (selectedLibraries) {

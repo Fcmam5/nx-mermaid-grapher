@@ -113,7 +113,10 @@ describe('Library core', () => {
     });
 
     it('should support deprecated impact parameter', () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       const out = coreCls.getGraphSnippet([], 'mermaid', ['lending-domain'], undefined, true);
+      expect(consoleErrorSpy).toHaveBeenCalledWith('warning: impact parameter is deprecated. Use transitive instead.');
+      consoleErrorSpy.mockRestore();
       expect(out).toContain('lending-application --> lending-domain');
       expect(out).toContain('lending-infrastructure --> lending-application');
       expect(out).not.toContain('catalogue');

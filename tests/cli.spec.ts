@@ -75,13 +75,14 @@ describe('CLI run()', () => {
   });
 
   it('--impact is deprecated and prints a warning', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     const out = run(['-f', FIXTURE, '-p', 'lending-domain', '--impact']);
 
     // Should still work functionally
     expect(out).toContain('lending-application --> lending-domain');
     // Should print deprecation warning to stderr
-    // Note: console.error is captured in tests, but we can't easily test it here
-    // The warning is: 'warning: --impact is deprecated. Use --transitive instead.'
+    expect(consoleErrorSpy).toHaveBeenCalledWith('warning: --impact is deprecated. Use --transitive instead.');
+    consoleErrorSpy.mockRestore();
   });
 
   it('returns USAGE for --help', () => {
