@@ -4,6 +4,7 @@ export { NxMermaidGrapher } from './core';
 export {
   excludeLibs,
   formatGraph,
+  transitiveLibs,
   impactLibs,
   isOutputFormat,
   selectLibs,

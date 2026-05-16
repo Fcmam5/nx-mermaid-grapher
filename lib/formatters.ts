@@ -50,7 +50,7 @@ export function selectLibs(graph: Edges<string>, libraries: readonly string[]): 
  *
  * Returns the input reference unchanged when `seeds` is empty.
  */
-export function impactLibs(graph: Edges<string>, seeds: readonly string[]): Edges<string> {
+export function transitiveLibs(graph: Edges<string>, seeds: readonly string[]): Edges<string> {
   if (seeds.length === 0) return graph;
   const included = new Set<string>(seeds);
   const seedSet = new Set<string>(seeds);
@@ -102,12 +102,21 @@ export function impactLibs(graph: Edges<string>, seeds: readonly string[]): Edge
     frontier = next;
   }
 
+  // Build result: keep only edges between included nodes.
   const result: Edges<string> = {};
   for (const [lib, deps] of Object.entries(graph)) {
     if (!included.has(lib)) continue;
     result[lib] = deps.filter((dep) => included.has(dep));
   }
   return result;
+}
+
+/**
+ * @deprecated Use `transitiveLibs` instead.
+ */
+export function impactLibs(graph: Edges<string>, seeds: readonly string[]): Edges<string> {
+  console.error('warning: impactLibs is deprecated. Use transitiveLibs instead.');
+  return transitiveLibs(graph, seeds);
 }
 
 export type OutputFormat = 'mermaid' | 'edges' | 'json' | 'dot' | 'stats';

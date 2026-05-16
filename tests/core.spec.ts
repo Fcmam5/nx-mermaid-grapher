@@ -105,8 +105,15 @@ describe('Library core', () => {
       expect(out).not.toContain('catalogue');
     });
 
-    it('should include full transitive closure with impact=true', () => {
+    it('should include full transitive closure with transitive=true', () => {
       const out = coreCls.getGraphSnippet([], 'mermaid', ['lending-domain'], true);
+      expect(out).toContain('lending-application --> lending-domain');
+      expect(out).toContain('lending-infrastructure --> lending-application');
+      expect(out).not.toContain('catalogue');
+    });
+
+    it('should support deprecated impact parameter', () => {
+      const out = coreCls.getGraphSnippet([], 'mermaid', ['lending-domain'], undefined, true);
       expect(out).toContain('lending-application --> lending-domain');
       expect(out).toContain('lending-infrastructure --> lending-application');
       expect(out).not.toContain('catalogue');
