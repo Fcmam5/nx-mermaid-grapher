@@ -1,0 +1,162 @@
+{
+  "graph": {
+    "nodes": {
+      "shared": {
+        "name": "shared",
+        "type": "lib",
+        "data": {
+          "root": "libs/shared",
+          "name": "shared",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/shared/src",
+          "projectType": "library",
+          "tags": [],
+          "targets": {},
+          "implicitDependencies": []
+        }
+      },
+      "utils": {
+        "name": "utils",
+        "type": "lib",
+        "data": {
+          "root": "libs/utils",
+          "name": "utils",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/utils/src",
+          "projectType": "library",
+          "tags": [],
+          "targets": {},
+          "implicitDependencies": []
+        }
+      },
+      "data": {
+        "name": "data",
+        "type": "lib",
+        "data": {
+          "root": "libs/data",
+          "name": "data",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/data/src",
+          "projectType": "library",
+          "tags": [],
+          "targets": {},
+          "implicitDependencies": []
+        }
+      },
+      "api": {
+        "name": "api",
+        "type": "app",
+        "data": {
+          "root": "apps/api",
+          "name": "api",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/api/src",
+          "projectType": "application",
+          "tags": [],
+          "implicitDependencies": [
+            "utils"
+          ],
+          "targets": {
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo 'Building api app'"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          }
+        }
+      },
+      "web": {
+        "name": "web",
+        "type": "app",
+        "data": {
+          "root": "apps/web",
+          "name": "web",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/web/src",
+          "projectType": "application",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "echo 'Building web app'"
+              },
+              "configurations": {},
+              "parallelism": true,
+              "inputs": [
+                "production",
+                "^production"
+              ],
+              "cache": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "ui": {
+        "name": "ui",
+        "type": "lib",
+        "data": {
+          "root": "libs/ui",
+          "name": "ui",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/ui/src",
+          "projectType": "library",
+          "tags": [],
+          "targets": {},
+          "implicitDependencies": []
+        }
+      }
+    },
+    "dependencies": {
+      "shared": [],
+      "utils": [],
+      "data": [
+        {
+          "source": "data",
+          "target": "shared",
+          "type": "static"
+        }
+      ],
+      "api": [
+        {
+          "source": "api",
+          "target": "utils",
+          "type": "implicit"
+        },
+        {
+          "source": "api",
+          "target": "data",
+          "type": "static"
+        }
+      ],
+      "web": [
+        {
+          "source": "web",
+          "target": "ui",
+          "type": "static"
+        },
+        {
+          "source": "web",
+          "target": "utils",
+          "type": "static"
+        }
+      ],
+      "ui": [
+        {
+          "source": "ui",
+          "target": "shared",
+          "type": "static"
+        }
+      ]
+    }
+  }
+}

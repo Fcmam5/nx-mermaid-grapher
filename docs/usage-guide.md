@@ -357,10 +357,10 @@ The two flags compose: `--exclude` runs first, then `--projects` filters the
 remaining graph. You can combine them for precise control.
 
 For the full transitive closure (all downstream dependencies and all upstream
-dependents), add `--impact`. This is useful when you need the complete ripple
+dependents), add `-t` or `--transitive`. This is useful when you need the complete ripple
 effect of a change.
 
-**How it works.** `--impact` performs a backward BFS from every seed (to find
+**How it works.** `-t`/`--transitive` performs a backward BFS from every seed (to find
 all upstream dependents) but only a *forward* BFS from the **root seeds** —
 seeds that do not depend on any other seed. This prevents unrelated sibling
 dependencies of downstream dependents from being pulled in.
@@ -372,7 +372,7 @@ included — only the true transitive impact of the changed set is rendered.
 
 ```bash
 npx nx-mermaid-grapher -f tests/mocks/ddd-example.graph.json \
-  -p lending-infrastructure --impact
+  -p lending-infrastructure -t
 ```
 
 ## Using the library programmatically
@@ -416,10 +416,10 @@ const trimmedDot = formatGraph(excludeLibs(graph, ['noisy-lib']), 'dot');
 const affected = selectLibs(graph, ['lending-infrastructure', 'lending-application']);
 const affectedMermaid = formatGraph(affected, 'mermaid');
 
-// Show impact context — affected projects plus full transitive closure:
-import { impactLibs } from 'nx-mermaid-grapher';
-const withImpact = impactLibs(graph, ['lending-infrastructure', 'lending-application']);
-const impactMermaid = formatGraph(withImpact, 'mermaid');
+// Show transitive context — affected projects plus full transitive closure:
+import { transitiveLibs } from 'nx-mermaid-grapher';
+const withTransitive = transitiveLibs(graph, ['lending-infrastructure', 'lending-application']);
+const transitiveMermaid = formatGraph(withTransitive, 'mermaid');
 ```
 
 You can also bring your own graph data structure by implementing `IGraph<T>`

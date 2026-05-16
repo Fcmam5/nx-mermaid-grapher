@@ -4,7 +4,7 @@ import {
   OutputFormat,
   excludeLibs,
   formatGraph,
-  impactLibs,
+  transitiveLibs,
   isOutputFormat,
   selectLibs,
 } from '../lib/formatters';
@@ -177,46 +177,46 @@ describe('selectLibs', () => {
   });
 });
 
-describe('impactLibs', () => {
+describe('transitiveLibs', () => {
   it('returns the input reference unchanged when no seeds are given', () => {
-    expect(impactLibs(SAMPLE, [])).toBe(SAMPLE);
+    expect(transitiveLibs(SAMPLE, [])).toBe(SAMPLE);
   });
 
   it('follows downstream dependencies recursively', () => {
     const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['d'], d: [] };
-    const out = impactLibs(graph, ['a']);
+    const out = transitiveLibs(graph, ['a']);
     expect(out).toEqual({ a: ['b'], b: ['c'], c: ['d'], d: [] });
   });
 
   it('follows upstream dependents recursively', () => {
     const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['d'], d: [] };
-    const out = impactLibs(graph, ['d']);
+    const out = transitiveLibs(graph, ['d']);
     expect(out).toEqual({ a: ['b'], b: ['c'], c: ['d'], d: [] });
   });
 
   it('keeps edges only between included nodes', () => {
     const graph: Edges<string> = { a: ['b', 'x'], b: ['c'], c: [], x: [] };
-    const out = impactLibs(graph, ['a']);
+    const out = transitiveLibs(graph, ['a']);
     // x is a direct dep of a, so it's included; edge a->x is preserved.
     expect(out).toEqual({ a: ['b', 'x'], b: ['c'], c: [], x: [] });
   });
 
   it('drops edges to nodes outside the transitive closure', () => {
     const graph: Edges<string> = { a: ['b', 'x'], b: ['c'], c: [], x: ['y'], y: [] };
-    const out = impactLibs(graph, ['b']);
+    const out = transitiveLibs(graph, ['b']);
     // a and c are in the closure (upstream/downstream of b); x and y are not.
     expect(out).toEqual({ a: ['b'], b: ['c'], c: [] });
   });
 
   it('handles cycles gracefully', () => {
     const graph: Edges<string> = { a: ['b'], b: ['c'], c: ['a'] };
-    const out = impactLibs(graph, ['a']);
+    const out = transitiveLibs(graph, ['a']);
     expect(out).toEqual({ a: ['b'], b: ['c'], c: ['a'] });
   });
 
   it('handles seeds where only the head is a root', () => {
     const graph: Edges<string> = { a: ['b'], b: ['c'], c: [] };
-    const out = impactLibs(graph, ['b', 'c']);
+    const out = transitiveLibs(graph, ['b', 'c']);
     // b depends on c (another seed), so only c is a root.
     // Forward BFS from c finds nothing; backward BFS from [b,c] finds a.
     expect(out).toEqual({ a: ['b'], b: ['c'], c: [] });
@@ -232,7 +232,7 @@ describe('impactLibs', () => {
       shared: [],
       utils: [],
     };
-    const out = impactLibs(graph, ['ui', 'web']);
+    const out = transitiveLibs(graph, ['ui', 'web']);
     expect(out).toEqual({
       web: ['ui'],
       ui: ['shared'],

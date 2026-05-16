@@ -1,5 +1,5 @@
 import { IGraph } from './data-structures/graph.ds.interface';
-import { excludeLibs, formatGraph, impactLibs, OutputFormat, selectLibs } from './formatters';
+import { excludeLibs, formatGraph, transitiveLibs, OutputFormat, selectLibs } from './formatters';
 import { GraphJsonResponse } from './nx/interfaces/graph-json.nx.interface';
 import { NXGraphFileLoader } from './nx/load-nx-graph';
 
@@ -26,11 +26,18 @@ export class NxMermaidGrapher {
     excludedLibs: string[] = [],
     format: OutputFormat = 'mermaid',
     selectedLibraries?: string[],
+    transitive?: boolean,
     impact?: boolean,
   ): string {
+    // Handle deprecation of impact parameter
+    if (impact !== undefined) {
+      console.error('warning: impact parameter is deprecated. Use transitive instead.');
+    }
+    const useTransitive = transitive !== undefined ? transitive : impact;
+
     let rs = excludeLibs(this.graph.getGraph(), excludedLibs);
     if (selectedLibraries) {
-      rs = impact ? impactLibs(rs, selectedLibraries) : selectLibs(rs, selectedLibraries);
+      rs = useTransitive ? transitiveLibs(rs, selectedLibraries) : selectLibs(rs, selectedLibraries);
     }
     return formatGraph(rs, format);
   }

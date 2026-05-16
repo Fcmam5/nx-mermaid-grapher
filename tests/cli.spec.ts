@@ -11,6 +11,7 @@ import { join } from 'node:path';
 import { CliError, run, USAGE } from '../lib/cli';
 
 const FIXTURE = join(__dirname, 'mocks', 'ddd-example.graph.json');
+const SIMPLE_DEMO = join(__dirname, 'mocks', 'simple-demo.graph.json');
 const realReadFileSync = jest.requireActual('node:fs').readFileSync as typeof readFileSync;
 const FIXTURE_CONTENT = realReadFileSync(FIXTURE, 'utf-8') as string;
 const mockedReadFileSync = readFileSync as unknown as jest.MockedFunction<typeof readFileSync>;
@@ -57,12 +58,31 @@ describe('CLI run()', () => {
     expect(out).not.toContain('library');
   });
 
-  it('honours --impact by including full transitive closure', () => {
-    const out = run(['-f', FIXTURE, '-p', 'lending-domain', '--impact']);
+  it('honours --transitive by including full transitive closure', () => {
+    const out = run(['-f', FIXTURE, '-p', 'lending-domain', '--transitive']);
 
     // Should include the full chain up to roots and down to leaves.
     expect(out).toContain('lending-application --> lending-domain');
     expect(out).toContain('lending-infrastructure --> lending-application');
+  });
+
+  it('honours -t (short flag for --transitive)', () => {
+    const out = run(['-f', FIXTURE, '-p', 'lending-domain', '-t']);
+
+    // Should work the same as --transitive
+    expect(out).toContain('lending-application --> lending-domain');
+    expect(out).toContain('lending-infrastructure --> lending-application');
+  });
+
+  it('--impact is deprecated and prints a warning', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const out = run(['-f', FIXTURE, '-p', 'lending-domain', '--impact']);
+
+    // Should still work functionally
+    expect(out).toContain('lending-application --> lending-domain');
+    // Should print deprecation warning to stderr
+    expect(consoleErrorSpy).toHaveBeenCalledWith('warning: --impact is deprecated. Use --transitive instead.');
+    consoleErrorSpy.mockRestore();
   });
 
   it('returns USAGE for --help', () => {
@@ -153,5 +173,78 @@ describe('CLI run()', () => {
     it('throws CliError for an unknown format', () => {
       expect(() => run(['-f', FIXTURE, '-o', 'graphviz'])).toThrow(/invalid --format/);
     });
+  });
+});
+
+describe('CLI run() with SIMPLE_DEMO fixture', () => {
+  it('renders the full graph for the simple demo', () => {
+    const out = run(['-f', SIMPLE_DEMO]);
+
+    expect(out).toContain('graph LR\n');
+    expect(out).toContain('data --> shared');
+    expect(out).toContain('api --> utils');
+    expect(out).toContain('api --> data');
+    expect(out).toContain('web --> ui');
+    expect(out).toContain('web --> utils');
+    expect(out).toContain('ui --> shared');
+  });
+
+  it('filters by --projects to show only selected libs', () => {
+    const out = run(['-f', SIMPLE_DEMO, '-p', 'web', '-p', 'ui']);
+
+    expect(out).toContain('web --> ui');
+    // ui --> shared is filtered out because shared is not in selected projects
+    expect(out).not.toContain('ui --> shared');
+    expect(out).not.toContain('api');
+    expect(out).not.toContain('data');
+    expect(out).not.toContain('utils');
+  });
+
+  it('--transitive with single seed includes downstream dependencies', () => {
+    const out = run(['-f', SIMPLE_DEMO, '-p', 'web', '--transitive']);
+
+    // web is a root seed (doesn't depend on any other seed)
+    // Forward BFS: web --> ui --> shared, web --> utils
+    expect(out).toContain('web --> ui');
+    expect(out).toContain('web --> utils');
+    expect(out).toContain('ui --> shared');
+  });
+
+  it('--transitive with multiple seeds uses root-seeds logic', () => {
+    const out = run(['-f', SIMPLE_DEMO, '-p', 'web', '-p', 'ui', '--transitive']);
+
+    // web depends on ui (another seed), so web is NOT a root
+    // ui is a root seed (doesn't depend on any other seed)
+    // Forward BFS from ui only: ui --> shared
+    // utils should NOT be included (unrelated sibling of web)
+    expect(out).toContain('web --> ui');
+    expect(out).toContain('ui --> shared');
+    expect(out).not.toContain('utils');
+  });
+
+  it('--exclude removes specified libraries', () => {
+    const out = run(['-f', SIMPLE_DEMO, '-e', 'utils']);
+
+    expect(out).not.toContain('utils');
+    expect(out).not.toContain('api --> utils');
+    expect(out).not.toContain('web --> utils');
+    expect(out).toContain('data --> shared');
+    expect(out).toContain('web --> ui');
+  });
+
+  it('--format edges emits plain edge list', () => {
+    const out = run(['-f', SIMPLE_DEMO, '-o', 'edges']);
+
+    expect(out).not.toContain('```');
+    expect(out).toContain('data shared');
+    expect(out).toContain('api utils');
+    expect(out).toContain('api data');
+  });
+
+  it('--format stats emits graph summary', () => {
+    const out = run(['-f', SIMPLE_DEMO, '-o', 'stats']);
+
+    expect(out).toMatch(/nodes:\s+6/);
+    expect(out).toMatch(/edges:\s+6/);
   });
 });

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **`impactLibs` function renamed to `transitiveLibs`.** The `impactLibs` function
+  is now deprecated but remains functional as an alias for backward compatibility.
+  A deprecation warning is printed when `impactLibs` is called. Use `transitiveLibs`
+  instead in all new code and documentation.
+- **`--impact` CLI flag renamed to `--transitive` (short flag: `-t`).** The
+  `--impact` flag is now deprecated but remains functional as an alias for
+  backward compatibility. A deprecation warning is printed when `--impact` is used.
+  Use `--transitive` or `-t` instead in all new code and documentation.
+- **`NxMermaidGrapher.getGraphSnippet` parameter renamed.** The `impact` parameter
+  is now deprecated in favor of `transitive`. The old `impact` parameter remains
+  functional for backward compatibility with a deprecation warning.
+
 ## [2.2.1] - 2026-05-15
 
 ### Changed
